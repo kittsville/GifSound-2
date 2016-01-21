@@ -88,6 +88,7 @@ YTPlugin = {
 		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, // http://stackoverflow.com/a/8260383/3565450
 		videoId   : '',	   // Video ID .e.g dQw4w9WgXcQ
 		startTime : 0,
+		length    : 0,
 		wrapper   : false,
 		player    : false,
 		apiLoading: false, // Whether the YouTube IFrame Player API has started asynchronously loading
@@ -166,7 +167,18 @@ YTPlugin = {
 		if (event.data == YT.PlayerState.PLAYING && YTPlugin.s.firstPlay) {
 			YTPlugin.s.player.pauseVideo();
 			YTPlugin.s.firstPlay = false;
+			YTPlugin.s.length    = YTPlugin.s.player.getDuration();
+			YTPlugin.readyWhenLoaded();
+		}
+	},
+	
+	// Sets sound as ready once the video is sufficiently buffered
+	readyWhenLoaded : function() {
+		// If more than 5 seconds have loaded or the video is more than 50% buffered
+		if (YTPlugin.s.length - YTPlugin.s.player.getCurrentTime() > 5 | YTPlugin.s.player.getVideoLoadedFraction() > 0.5) {
 			gifSound.soundReady();
+		} else {
+			setTimeout(YTPlugin.readyWhenLoaded, 600);
 		}
 	},
 	
