@@ -98,7 +98,7 @@ theForm = {
 
 YTPlugin = {
 	s : {
-		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, // http://stackoverflow.com/a/8260383/3565450
+		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, // Via http://stackoverflow.com/a/8260383/3565450
 		videoId   : '',	   // Video ID .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
