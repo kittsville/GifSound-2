@@ -221,7 +221,7 @@ YTPlugin = {
  */
 GifPlugin = {
 	s : {
-		regex   : /.+/, // /^i\.imgur\.com\/[a-zA-Z0-9]{5,8}\.gif/
+		regex   : /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:gif))(?:\?([^#]*))?(?:#(.*))?/, // Via http://stackoverflow.com/a/169631/3565450
 		img     : false,
 	},
 	
