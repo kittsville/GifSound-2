@@ -18,6 +18,7 @@ theForm = {
 		soundInput: 	$('input#sound-url'),
 		startTimeInput:	$('input#sound-start-time'),
 		makeButton:		$('a#make-gifsound'),
+		urlSanitizer:   /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g,
 	},
 	
 	init: function() {
@@ -38,6 +39,8 @@ theForm = {
 	},
 	
 	processGifURL : function(gifURL) {
+		gifURL = gifURL.replace(theForm.s.urlSanitizer, '');
+		
 		$.each(gifSound.s.gifPlugins, function(i, plugin) {
 			if (plugin.recogniseURL(gifURL)) {
 				theGif = plugin;
@@ -53,6 +56,8 @@ theForm = {
 	},
 	
 	processSoundURL : function(soundURL, startTime) {
+		soundURL = soundURL.replace(theForm.s.urlSanitizer, '');
+		
 		startTime = parseInt(startTime);
 		
 		if (startTime === NaN) {
