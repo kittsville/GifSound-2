@@ -140,8 +140,6 @@ YTPlugin = {
 		} else if (!YTPlugin.s.apiLoading) {
 			YTPlugin.s.apiLoading = true;
 			
-			wrapper.html('<div id="youtube-embed"/>');
-			
 			var tag = document.createElement('script');
 
 			tag.src = "https://www.youtube.com/iframe_api";
@@ -158,6 +156,8 @@ YTPlugin = {
 	
 	// Loads video via YT API. Assumes API has been loaded
 	loadVideo : function() {
+		YTPlugin.s.wrapper.html('<div id="youtube-embed"/>');
+		
 		YTPlugin.s.player = new YT.Player('youtube-embed', {
 			height       : '300',
 			width        : '300',
