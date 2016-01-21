@@ -13,12 +13,12 @@ $(function(){
 
 theForm = {
 	s: {
-		form:			$('form#gifsound-input'),
-		gifInput: 		$('input#gif-url'),
-		soundInput: 	$('input#sound-url'),
-		startTimeInput:	$('input#sound-start-time'),
-		makeButton:		$('a#make-gifsound'),
-		urlSanitizer:   /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g,
+		form           : $('form#gifsound-input'),
+		gifInput       : $('input#gif-url'),
+		soundInput     : $('input#sound-url'),
+		startTimeInput : $('input#sound-start-time'),
+		makeButton     : $('a#make-gifsound'),
+		urlSanitizer   : /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g,
 	},
 	
 	init: function() {
