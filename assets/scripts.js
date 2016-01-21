@@ -152,6 +152,8 @@ YTPlugin = {
 			playerVars   : {
 				'autoplay' : 1,
 				'controls' : 0,
+				'loop'     : 1,
+				'playlist' : YTPlugin.s.videoId,
 			},
 			events       : {
 				'onReady'       : YTPlugin.onPlayerReady,
