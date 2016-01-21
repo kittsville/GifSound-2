@@ -18,7 +18,7 @@ theForm = {
 		soundInput     : $('input#sound-url'),
 		startTimeInput : $('input#sound-start-time'),
 		makeButton     : $('a#make-gifsound'),
-		urlSanitizer   : /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g,
+		urlSanitizer   : /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g, // Via stackoverflow.com/a/205967/3565450
 	},
 	
 	init: function() {
