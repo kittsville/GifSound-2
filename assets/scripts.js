@@ -153,13 +153,13 @@ YTPlugin = {
 		YTPlugin.s.player = new YT.Player('youtube-embed', {
 			height       : '300',
 			width        : '300',
-			startSeconds : YTPlugin.s.startTime,
 			videoId      : YTPlugin.s.videoId,
 			playerVars   : {
 				'autoplay' : 1,
 				'controls' : 0,
 				'loop'     : 1,
 				'playlist' : YTPlugin.s.videoId,
+				'start'    : YTPlugin.s.startTime,
 			},
 			events       : {
 				'onReady'       : YTPlugin.onPlayerReady,
