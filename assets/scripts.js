@@ -32,6 +32,12 @@ theForm = {
 	formSubmission : function(event) {
 		event.preventDefault();
 		
+		// Clears previous embeds, if necessary
+		if (typeof theGif === 'object' | typeof theSound === 'object') {
+			gifSound.s.gifWrapper.html('');
+			gifSound.s.soundWrapper.html('');
+		}
+		
 		// Resets
 		gifSound.s.gifReady   = false;
 		gifSound.s.soundReady = false;
