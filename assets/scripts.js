@@ -26,16 +26,18 @@ theForm = {
 	},
 	
 	bindUIHandlers : function() {
-		this.s.form.submit(function(event){
-			event.preventDefault();
-			
-			// Resets
-			gifSound.s.gifReady   = false;
-			gifSound.s.soundReady = false;
-			
-			theForm.processSoundURL(theForm.s.soundInput.val(), theForm.s.startTimeInput.val());
-			theForm.processGifURL(theForm.s.gifInput.val());
-		});
+		this.s.form.submit(theForm.formSubmission);
+	},
+	
+	formSubmission : function(event) {
+		event.preventDefault();
+		
+		// Resets
+		gifSound.s.gifReady   = false;
+		gifSound.s.soundReady = false;
+		
+		theForm.processSoundURL(theForm.s.soundInput.val(), theForm.s.startTimeInput.val());
+		theForm.processGifURL(theForm.s.gifInput.val());
 	},
 	
 	processGifURL : function(gifURL) {
