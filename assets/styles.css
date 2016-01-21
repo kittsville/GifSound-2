@@ -93,7 +93,7 @@ input[type=url] {
 	width: 40%;
 }
 
-input[type=submit]#make-gifsound {
+input#make-gifsound {
 	line-height: 28px;
 	padding: 0px 12px 2px;
 	color: #F9F9F9;
