@@ -57,6 +57,7 @@ theForm = {
 		});
 		
 		if (typeof theGif === 'object') {
+			gifSound.gifLoading();
 			theGif.embedGif(gifURL, gifSound.s.gifWrapper);
 		} else {
 			throw "I don't have a media plugin that can handle that gif URL";
@@ -80,6 +81,7 @@ theForm = {
 		});
 		
 		if (typeof theSound === 'object') {
+			gifSound.soundLoading();
 			theSound.embedSound(soundURL, gifSound.s.soundWrapper, startTime);
 		} else {
 			throw "I don't have a media plugin that can handle that audio URL";
@@ -268,6 +270,8 @@ gifSound = {
 		gifWrapper   : $('div#gif-wrapper'),
 		soundReady   : false,
 		gifReady     : false,
+		gifSpinner   : $('div#gif-loading'),
+		soundSpinner : $('div#sound-loading'),
 	},
 	
 	init : function() {
@@ -276,6 +280,14 @@ gifSound = {
 	
 	bindUIHandlers : function() {
 		
+	},
+	
+	gifLoading : function() {
+		gifSound.s.gifSpinner.show();
+	},
+	
+	soundLoading: function() {
+		gifSound.s.soundSpinner.show();
 	},
 	
 	soundReady : function() {
@@ -295,6 +307,10 @@ gifSound = {
 	playIfSynced : function() {
 		if (gifSound.s.gifReady && gifSound.s.soundReady) {
 			console.log('Gif and Sound are synced');
+			
+			gifSound.s.gifSpinner.hide();
+			gifSound.s.soundSpinner.hide();
+			
 			theGif.playGif();
 			theSound.playSound();
 		}

@@ -19,3 +19,16 @@ Please direct suggestions, questions, sexy nudes and hate mail to kittsville(at)
 ### License
 
 GPL v2 or later
+
+### 3rd Party Software Used
+
+####SpinKit
+
+*By Tobias Ahlin*
+
+CSS loading spinners
+
+[GitHub](https://github.com/tobiasahlin/SpinKit)
+
+License: MIT
+
