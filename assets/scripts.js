@@ -46,8 +46,12 @@ theForm = {
 		theForm.processGifURL(theForm.s.gifInput.val());
 	},
 	
+	sanitizeURL : function(url) {
+		return url.replace(theForm.s.urlSanitizer, '');
+	}
+	
 	processGifURL : function(gifURL) {
-		gifURL = gifURL.replace(theForm.s.urlSanitizer, '');
+		gifURL = theForm.sanitizeURL(gifURL);
 		
 		$.each(gifSound.s.gifPlugins, function(i, plugin) {
 			if (plugin.recogniseURL(gifURL)) {
@@ -65,7 +69,7 @@ theForm = {
 	},
 	
 	processSoundURL : function(soundURL, startTime) {
-		soundURL = soundURL.replace(theForm.s.urlSanitizer, '');
+		soundURL = theForm.sanitizeURL(soundURL);
 		
 		startTime = parseInt(startTime);
 		
