@@ -1,9 +1,9 @@
 /*
  * The primary objects of concern are:
- * theGif		- Handles the embedded animation (gif, gifv, webm, etc.)
- * theSound		- Handles the embedded audio (YouTube, SoundCloud, Vocaroo, mp3 file, etc.)
- * theForm		- Handles the forms elements and its submission
- * gifSound		- Handles the whole page and calling relevant objects from above
+ * theGif       - Handles the embedded animation (gif, gifv, webm, etc.)
+ * theSound     - Handles the embedded audio (YouTube, SoundCloud, Vocaroo, mp3 file, etc.)
+ * theForm      - Handles the forms elements and its submission
+ * gifSound     - Handles the whole page and calling relevant objects from above
  * If you think any of this sucks then please fork it.
  * I continue to suck at JavaScript I just can't stop writing it.
  */
@@ -99,7 +99,7 @@ theForm = {
 YTPlugin = {
 	s : {
 		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, // Via http://stackoverflow.com/a/8260383/3565450
-		videoId   : '',	   // Video ID .e.g dQw4w9WgXcQ
+		videoId   : '',    // Video ID .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
 		wrapper   : false,
@@ -220,7 +220,7 @@ YTPlugin = {
 GifPlugin = {
 	s : {
 		regex   : /.+/, // /^i\.imgur\.com\/[a-zA-Z0-9]{5,8}\.gif/
-		img 	: false,
+		img     : false,
 	},
 	
 	recogniseURL : function(url) {
