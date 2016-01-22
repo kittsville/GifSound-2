@@ -268,14 +268,14 @@ GifPlugin = {
 
 gifSound = {
 	s : {
-		soundPlugins : [YTPlugin],
-		gifPlugins   : [GifPlugin],
-		soundWrapper : $('div#sound-wrapper'),
-		gifWrapper   : $('div#gif-wrapper'),
-		soundReady   : false,
-		gifReady     : false,
-		gifSpinner   : $('div#gif-loading'),
-		soundSpinner : $('div#sound-loading'),
+		soundPlugins   : [YTPlugin],
+		gifPlugins     : [GifPlugin],
+		soundWrapper   : $('div#sound-wrapper'),
+		gifWrapper     : $('div#gif-wrapper'),
+		soundReady     : false,
+		gifReady       : false,
+		gifSpinner     : $('div#gif-loading'),
+		soundSpinner   : $('div#sound-loading'),
 		gifReadyText   : $('p#gif-loaded'),
 		soundReadyText : $('p#sound-loaded'),
 	},
