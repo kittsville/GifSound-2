@@ -48,7 +48,7 @@ theForm = {
 	
 	sanitizeURL : function(url) {
 		return url.replace(theForm.s.urlSanitizer, '');
-	}
+	},
 	
 	processGifURL : function(gifURL) {
 		gifURL = theForm.sanitizeURL(gifURL);
