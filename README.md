@@ -8,7 +8,7 @@ GifSound.com but better
 - No server-side code
 - Modular gif/sound plugins (easy to add support for new gif/sound embeds)
 
-### Better Why?
+### Why?
 
 I spend too much time on [/r/GifSound](http://reddit.com/r/gifsound) and found it annoying that gifs sometimes didn't sync to the audio because of gif/YouTube loading times. I was going to contact gifsound.com's creators but I wanted to check if it was possible first. Ended up making my own version from scratch.
 
