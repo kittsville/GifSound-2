@@ -124,6 +124,13 @@ input#sound-start-time {
 	width: 30px;
 }
 
+/* Waiting */
+
+#gif-loaded, #sound-loaded {
+	display: none;
+	margin-top: 240px; /* Lines up with Loading text because spinner: 100px + 100px + 40px */
+}
+
 /* Loading Spinners */
 
 #gif-loading, #sound-loading {

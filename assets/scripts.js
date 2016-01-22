@@ -276,6 +276,8 @@ gifSound = {
 		gifReady     : false,
 		gifSpinner   : $('div#gif-loading'),
 		soundSpinner : $('div#sound-loading'),
+		gifReadyText   : $('p#gif-loaded'),
+		soundReadyText : $('p#sound-loaded'),
 	},
 	
 	init : function() {
@@ -298,6 +300,9 @@ gifSound = {
 		console.log('Sound Ready');
 		
 		gifSound.s.soundReady = true;
+		gifSound.s.soundSpinner.hide();
+		gifSound.s.soundReadyText.show();
+		
 		gifSound.playIfSynced();
 	},
 	
@@ -305,6 +310,9 @@ gifSound = {
 		console.log('Gif Ready');
 		
 		gifSound.s.gifReady = true;
+		gifSound.s.gifSpinner.hide();
+		gifSound.s.gifReadyText.show();
+		
 		gifSound.playIfSynced();
 	},
 	
@@ -312,8 +320,8 @@ gifSound = {
 		if (gifSound.s.gifReady && gifSound.s.soundReady) {
 			console.log('Gif and Sound are synced');
 			
-			gifSound.s.gifSpinner.hide();
-			gifSound.s.soundSpinner.hide();
+			gifSound.s.gifReadyText.hide();
+			gifSound.s.soundReadyText.hide();
 			
 			theGif.playGif();
 			theSound.playSound();
