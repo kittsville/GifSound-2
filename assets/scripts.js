@@ -266,10 +266,79 @@ GifPlugin = {
 	},
 },
 
+/*
+ * Plugin to embed Gifvs from imgur.com 
+ */
+GifvPlugin = {
+	s : {
+		regex   : /^(http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
+		video   : false,
+	},
+	
+	recogniseURL : function(url) {
+		var match = url.match(GifvPlugin.s.regex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	// Gets ID of Imgur Gifv
+	getImgurID : function(url) {
+		return url.match(GifvPlugin.s.regex)[2];
+	},
+	
+	embedGif : function(url, wrapper) {
+		var video = document.createElement('video'),
+		source1   = document.createElement('source'),
+		source2   = document.createElement('source'),
+		imgurID   = GifvPlugin.getImgurID(url),
+		srcBase   = 'http://i.imgur.com/' + imgurID;
+		
+		// ADD FAILURE TEXT
+		
+		video.loop     = true;
+		video.muted    = true;
+		
+		source1.type = 'video/webm';
+		source1.src  = srcBase + '.webm';
+		
+		source2.type = 'video/mp4';
+		source2.src  = srcBase + '.mp4';
+		
+		
+		video.appendChild(source1);
+		video.appendChild(source2);
+		
+		video.addEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
+		
+		GifvPlugin.s.video = video;
+		
+		wrapper[0].appendChild(video);
+	},
+	
+	// When browser thinks video is sufficiently buffered for continuous playback
+	videoBuffered() {
+		GifvPlugin.s.video.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
+		
+		gifSound.gifReady();
+	},
+	
+	playGif() {
+		GifvPlugin.s.video.play();
+	},
+	
+	pauseGif() {
+		GifvPlugin.s.video.pause();
+	},
+},
+
 gifSound = {
 	s : {
 		soundPlugins   : [YTPlugin],
-		gifPlugins     : [GifPlugin],
+		gifPlugins     : [GifPlugin, GifvPlugin],
 		soundWrapper   : $('div#sound-wrapper'),
 		gifWrapper     : $('div#gif-wrapper'),
 		soundReady     : false,
