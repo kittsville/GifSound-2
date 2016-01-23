@@ -54,7 +54,7 @@ h1, p {
 	vertical-align: top;
 }
 
-#sound-wrapper {
+#sound-wrapper, #gif-wrapper {
 	z-index: 1;
 }
 
@@ -68,6 +68,7 @@ h1, p {
 /* Gif Styling */
 
 #gif-area {
+	position: relative;
 	width: 400px;
 	height: 400px;
 	margin-right: 20px;
@@ -135,9 +136,6 @@ input#sound-start-time {
 
 #gif-loading, #sound-loading {
 	display: none;
-}
-
-#sound-loading {
 	z-index: 2;
 	position: absolute;
 	width: 100%;
