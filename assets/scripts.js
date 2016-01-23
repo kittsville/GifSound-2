@@ -32,6 +32,12 @@ theForm = {
 	formSubmission : function(event) {
 		event.preventDefault();
 		
+		// Hides all overlays in case form was submitted mid-way through loading
+		gifSound.s.gifSpinner.hide();
+		gifSound.s.gifReadyText.hide();
+		gifSound.s.soundSpinner.hide();
+		gifSound.s.soundReadyText.hide();
+		
 		// Clears previous embeds, if necessary
 		if (typeof theGif === 'object' | typeof theSound === 'object') {
 			gifSound.s.gifWrapper.html('');
