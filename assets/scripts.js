@@ -368,6 +368,16 @@ gifSound = {
 		gifSound.s.gifSpinner.show();
 	},
 	
+	gifReady : function() {
+		console.log('Gif Ready');
+		
+		gifSound.s.gifReady = true;
+		gifSound.s.gifSpinner.hide();
+		gifSound.s.gifReadyText.show();
+		
+		gifSound.playIfSynced();
+	},
+	
 	soundLoading: function() {
 		gifSound.s.soundWrapper.hide();
 		gifSound.s.soundSpinner.show();
@@ -379,16 +389,6 @@ gifSound = {
 		gifSound.s.soundReady = true;
 		gifSound.s.soundSpinner.hide();
 		gifSound.s.soundReadyText.show();
-		
-		gifSound.playIfSynced();
-	},
-	
-	gifReady : function() {
-		console.log('Gif Ready');
-		
-		gifSound.s.gifReady = true;
-		gifSound.s.gifSpinner.hide();
-		gifSound.s.gifReadyText.show();
 		
 		gifSound.playIfSynced();
 	},
