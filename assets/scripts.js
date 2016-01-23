@@ -289,10 +289,12 @@ gifSound = {
 	},
 	
 	gifLoading : function() {
+		gifSound.s.gifWrapper.hide();
 		gifSound.s.gifSpinner.show();
 	},
 	
 	soundLoading: function() {
+		gifSound.s.soundWrapper.hide();
 		gifSound.s.soundSpinner.show();
 	},
 	
@@ -322,6 +324,9 @@ gifSound = {
 			
 			gifSound.s.gifReadyText.hide();
 			gifSound.s.soundReadyText.hide();
+			
+			gifSound.s.gifWrapper.show();
+			gifSound.s.soundWrapper.show();
 			
 			theGif.playGif();
 			theSound.playSound();
