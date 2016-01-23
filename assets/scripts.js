@@ -1,17 +1,17 @@
 /*
  * The primary objects of concern are:
- * theGif       - Handles the embedded animation (gif, gifv, webm, etc.)
- * theSound     - Handles the embedded audio (YouTube, SoundCloud, Vocaroo, mp3 file, etc.)
- * theForm      - Handles the forms elements and its submission
- * gifSound     - Handles the whole page and calling relevant objects from above
+ * TheGif       - Handles the embedded animation (gif, gifv, webm, etc.)
+ * TheSound     - Handles the embedded audio (YouTube, SoundCloud, Vocaroo, mp3 file, etc.)
+ * TheForm      - Handles the forms elements and its submission
+ * GifSound     - Handles the whole page and calling relevant objects from above
  * If you think any of this sucks then please fork it.
  * I continue to suck at JavaScript I just can't stop writing it.
  */
-var theGif, theSound, theForm, gifSound;
+var TheGif, TheSound, TheForm, GifSound;
 
 $(function(){
 
-theForm = {
+TheForm = {
 	s: {
 		form           : $('form#gifsound-input'),
 		gifInput       : $('input#gif-url'),
@@ -26,56 +26,56 @@ theForm = {
 	},
 	
 	bindUIHandlers : function() {
-		this.s.form.submit(theForm.formSubmission);
+		this.s.form.submit(TheForm.formSubmission);
 	},
 	
 	formSubmission : function(event) {
 		event.preventDefault();
 		
 		// Hides all overlays in case form was submitted mid-way through loading
-		gifSound.s.gifSpinner.hide();
-		gifSound.s.gifReadyText.hide();
-		gifSound.s.soundSpinner.hide();
-		gifSound.s.soundReadyText.hide();
+		GifSound.s.gifSpinner.hide();
+		GifSound.s.gifReadyText.hide();
+		GifSound.s.soundSpinner.hide();
+		GifSound.s.soundReadyText.hide();
 		
 		// Clears previous embeds, if necessary
-		if (typeof theGif === 'object' | typeof theSound === 'object') {
-			gifSound.s.gifWrapper.html('');
-			gifSound.s.soundWrapper.html('');
+		if (typeof TheGif === 'object' | typeof TheSound === 'object') {
+			GifSound.s.gifWrapper.html('');
+			GifSound.s.soundWrapper.html('');
 		}
 		
 		// Resets
-		gifSound.s.gifReady   = false;
-		gifSound.s.soundReady = false;
+		GifSound.s.gifReady   = false;
+		GifSound.s.soundReady = false;
 		
-		theForm.processSoundURL(theForm.s.soundInput.val(), theForm.s.startTimeInput.val());
-		theForm.processGifURL(theForm.s.gifInput.val());
+		TheForm.processSoundURL(TheForm.s.soundInput.val(), TheForm.s.startTimeInput.val());
+		TheForm.processGifURL(TheForm.s.gifInput.val());
 	},
 	
 	sanitizeURL : function(url) {
-		return url.replace(theForm.s.urlSanitizer, '');
+		return url.replace(TheForm.s.urlSanitizer, '');
 	},
 	
 	processGifURL : function(gifURL) {
-		gifURL = theForm.sanitizeURL(gifURL);
+		gifURL = TheForm.sanitizeURL(gifURL);
 		
-		$.each(gifSound.s.gifPlugins, function(i, plugin) {
+		$.each(GifSound.s.gifPlugins, function(i, plugin) {
 			if (plugin.recogniseURL(gifURL)) {
-				theGif = plugin;
+				TheGif = plugin;
 				return true;
 			}
 		});
 		
-		if (typeof theGif === 'object') {
-			gifSound.gifLoading();
-			theGif.embedGif(gifURL, gifSound.s.gifWrapper);
+		if (typeof TheGif === 'object') {
+			GifSound.gifLoading();
+			TheGif.embedGif(gifURL, GifSound.s.gifWrapper);
 		} else {
 			throw "I don't have a media plugin that can handle that gif URL";
 		}
 	},
 	
 	processSoundURL : function(soundURL, startTime) {
-		soundURL = theForm.sanitizeURL(soundURL);
+		soundURL = TheForm.sanitizeURL(soundURL);
 		
 		startTime = parseInt(startTime);
 		
@@ -83,16 +83,16 @@ theForm = {
 			startTime = 0;
 		}
 		
-		$.each(gifSound.s.soundPlugins, function(i, plugin) {
+		$.each(GifSound.s.soundPlugins, function(i, plugin) {
 			if (plugin.recogniseURL(soundURL)) {
-				theSound = plugin;
+				TheSound = plugin;
 				return true;
 			}
 		});
 		
-		if (typeof theSound === 'object') {
-			gifSound.soundLoading();
-			theSound.embedSound(soundURL, gifSound.s.soundWrapper, startTime);
+		if (typeof TheSound === 'object') {
+			GifSound.soundLoading();
+			TheSound.embedSound(soundURL, GifSound.s.soundWrapper, startTime);
 		} else {
 			throw "I don't have a media plugin that can handle that audio URL";
 		}
@@ -201,7 +201,7 @@ YTPlugin = {
 	readyWhenLoaded : function() {
 		// If more than 5 seconds have loaded or the video is more than 50% buffered
 		if (YTPlugin.s.length - YTPlugin.s.player.getCurrentTime() > 5 | YTPlugin.s.player.getVideoLoadedFraction() > 0.5) {
-			gifSound.soundReady();
+			GifSound.soundReady();
 		} else {
 			setTimeout(YTPlugin.readyWhenLoaded, 600);
 		}
@@ -252,7 +252,7 @@ GifPlugin = {
 		
 		wrapper.html(GifPlugin.s.img);
 		
-		GifPlugin.s.img.one('load', gifSound.gifReady);
+		GifPlugin.s.img.one('load', GifSound.gifReady);
 		
 		/*
 		 * Cache fix for browsers that don't trigger 'load'. Thanks Nick Craver:
@@ -329,7 +329,7 @@ GifvPlugin = {
 	videoBuffered() {
 		GifvPlugin.s.video.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
 		
-		gifSound.gifReady();
+		GifSound.gifReady();
 	},
 	
 	playGif() {
@@ -341,7 +341,7 @@ GifvPlugin = {
 	},
 },
 
-gifSound = {
+GifSound = {
 	s : {
 		soundPlugins   : [YTPlugin],
 		gifPlugins     : [GifPlugin, GifvPlugin],
@@ -364,51 +364,51 @@ gifSound = {
 	},
 	
 	gifLoading : function() {
-		gifSound.s.gifWrapper.hide();
-		gifSound.s.gifSpinner.show();
+		GifSound.s.gifWrapper.hide();
+		GifSound.s.gifSpinner.show();
 	},
 	
 	gifReady : function() {
 		console.log('Gif Ready');
 		
-		gifSound.s.gifReady = true;
-		gifSound.s.gifSpinner.hide();
-		gifSound.s.gifReadyText.show();
+		GifSound.s.gifReady = true;
+		GifSound.s.gifSpinner.hide();
+		GifSound.s.gifReadyText.show();
 		
-		gifSound.playIfSynced();
+		GifSound.playIfSynced();
 	},
 	
 	soundLoading: function() {
-		gifSound.s.soundWrapper.hide();
-		gifSound.s.soundSpinner.show();
+		GifSound.s.soundWrapper.hide();
+		GifSound.s.soundSpinner.show();
 	},
 	
 	soundReady : function() {
 		console.log('Sound Ready');
 		
-		gifSound.s.soundReady = true;
-		gifSound.s.soundSpinner.hide();
-		gifSound.s.soundReadyText.show();
+		GifSound.s.soundReady = true;
+		GifSound.s.soundSpinner.hide();
+		GifSound.s.soundReadyText.show();
 		
-		gifSound.playIfSynced();
+		GifSound.playIfSynced();
 	},
 	
 	playIfSynced : function() {
-		if (gifSound.s.gifReady && gifSound.s.soundReady) {
+		if (GifSound.s.gifReady && GifSound.s.soundReady) {
 			console.log('Gif and Sound are synced');
 			
-			gifSound.s.gifReadyText.hide();
-			gifSound.s.soundReadyText.hide();
+			GifSound.s.gifReadyText.hide();
+			GifSound.s.soundReadyText.hide();
 			
-			gifSound.s.gifWrapper.show();
-			gifSound.s.soundWrapper.show();
+			GifSound.s.gifWrapper.show();
+			GifSound.s.soundWrapper.show();
 			
-			theGif.playGif();
-			theSound.playSound();
+			TheGif.playGif();
+			TheSound.playSound();
 		}
 	}
 };
 
-theForm.init();
+TheForm.init();
 
 });
