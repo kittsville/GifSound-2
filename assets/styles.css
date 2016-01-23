@@ -137,11 +137,8 @@ input#sound-start-time {
 	display: none;
 }
 
-#sound-loading { 
-	z-index: 2;
-}
-
 #sound-loading {
+	z-index: 2;
 	position: absolute;
 	width: 100%;
 }
