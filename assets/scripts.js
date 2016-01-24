@@ -359,14 +359,6 @@ GifSound = {
 		soundReadyText : $('p#sound-loaded'),
 	},
 	
-	init : function() {
-		this.bindUIHandlers();
-	},
-	
-	bindUIHandlers : function() {
-		
-	},
-	
 	gifLoading : function() {
 		GifSound.s.gifWrapper.hide();
 		GifSound.s.gifSpinner.show();
