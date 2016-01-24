@@ -270,7 +270,7 @@ GifPlugin = {
 	pauseGif : function() {
 		GifPlugin.s.img.hide();
 	},
-},
+};
 
 /*
  * Plugin to embed Gifvs from imgur.com 
@@ -339,7 +339,7 @@ GifvPlugin = {
 	pauseGif() {
 		GifvPlugin.s.video.pause();
 	},
-},
+};
 
 GifSound = {
 	s : {
