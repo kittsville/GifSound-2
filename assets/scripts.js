@@ -100,6 +100,131 @@ TheForm = {
 };
 
 /*
+ * GIF PLUGINS
+ * All gif plugins must have the following methods:
+ * recogniseURL - Given a URL returns true or false if it can handle that URL
+ * embedGif     - Embed appropriate gif player (Webm player, <img> tag, etc.) set to be PAUSED
+ * playGif      - Plays embedded gif
+ * pauseGif     - Pauses embedded gif
+ */
+
+/*
+ * General purpose gif plugin
+ * Embeds gifs with an img tag (wow, much difficult)
+ */
+GifPlugin = {
+	s : {
+		regex   : /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:gif))(?:\?([^#]*))?(?:#(.*))?/, // Via http://stackoverflow.com/a/169631/3565450
+		img     : false,
+	},
+	
+	recogniseURL : function(url) {
+		var match = url.match(GifPlugin.s.regex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	embedGif : function(url, wrapper) {
+		GifPlugin.s.img = $('<img/>',{src:url});
+		
+		GifPlugin.s.img.hide();
+		
+		wrapper.html(GifPlugin.s.img);
+		
+		GifPlugin.s.img.one('load', GifSound.gifReady);
+		
+		/*
+		 * Cache fix for browsers that don't trigger 'load'. Thanks Nick Craver:
+		 * http://stackoverflow.com/a/2392448/3565450
+		 */
+		if (GifPlugin.s.img.complete) {
+			GifPlugin.s.img.trigger('load');
+		}
+	},
+	
+	playGif : function() {
+		GifPlugin.s.img.show();
+	},
+	
+	pauseGif : function() {
+		GifPlugin.s.img.hide();
+	},
+};
+
+/*
+ * Embeds Gifvs (webm/mp4s) from imgur.com
+ */
+GifvPlugin = {
+	s : {
+		regex   : /^(http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
+		video   : false,
+	},
+	
+	recogniseURL : function(url) {
+		var match = url.match(GifvPlugin.s.regex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	// Gets ID of Imgur Gifv
+	getImgurID : function(url) {
+		return url.match(GifvPlugin.s.regex)[2];
+	},
+	
+	embedGif : function(url, wrapper) {
+		var video = document.createElement('video'),
+		source1   = document.createElement('source'),
+		source2   = document.createElement('source'),
+		imgurID   = GifvPlugin.getImgurID(url),
+		srcBase   = 'http://i.imgur.com/' + imgurID;
+		
+		// ADD FAILURE TEXT
+		
+		video.loop     = true;
+		video.muted    = true;
+		
+		source1.type = 'video/webm';
+		source1.src  = srcBase + '.webm';
+		
+		source2.type = 'video/mp4';
+		source2.src  = srcBase + '.mp4';
+		
+		
+		video.appendChild(source1);
+		video.appendChild(source2);
+		
+		video.addEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
+		
+		GifvPlugin.s.video = video;
+		
+		wrapper[0].appendChild(video);
+	},
+	
+	// When browser thinks video is sufficiently buffered for continuous playback
+	videoBuffered() {
+		GifvPlugin.s.video.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
+		
+		GifSound.gifReady();
+	},
+	
+	playGif() {
+		GifvPlugin.s.video.play();
+	},
+	
+	pauseGif() {
+		GifvPlugin.s.video.pause();
+	},
+};
+
+/*
  * SOUND PLUGINS
  * All sound plugins must have the following methods:
  * recogniseURL - Given a URL returns true or false if it can handle that URL
@@ -108,6 +233,9 @@ TheForm = {
  * pauseSound   - Pauses embedded sound
  */
 
+/*
+ * Embeds videos from YouTube.com
+ */
 YTPlugin = {
 	s : {
 		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/, // Via http://stackoverflow.com/a/8260383/3565450
@@ -216,131 +344,7 @@ YTPlugin = {
 	},
 };
 
-/*
- * GIF PLUGINS
- * All gif plugins must have the following methods:
- * recogniseURL - Given a URL returns true or false if it can handle that URL
- * embedGif     - Embed appropriate gif player (Webm player, <img> tag, etc.) set to be PAUSED
- * playGif      - Plays embedded gif
- * pauseGif     - Pauses embedded gif
- */
-
-/*
- * General purpose gif plugin
- * Embeds gifs with an img tag (wow, much difficult)
- */
-GifPlugin = {
-	s : {
-		regex   : /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:gif))(?:\?([^#]*))?(?:#(.*))?/, // Via http://stackoverflow.com/a/169631/3565450
-		img     : false,
-	},
-	
-	recogniseURL : function(url) {
-		var match = url.match(GifPlugin.s.regex);
-		
-		if (match) {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	
-	embedGif : function(url, wrapper) {
-		GifPlugin.s.img = $('<img/>',{src:url});
-		
-		GifPlugin.s.img.hide();
-		
-		wrapper.html(GifPlugin.s.img);
-		
-		GifPlugin.s.img.one('load', GifSound.gifReady);
-		
-		/*
-		 * Cache fix for browsers that don't trigger 'load'. Thanks Nick Craver:
-		 * http://stackoverflow.com/a/2392448/3565450
-		 */
-		if (GifPlugin.s.img.complete) {
-			GifPlugin.s.img.trigger('load');
-		}
-	},
-	
-	playGif : function() {
-		GifPlugin.s.img.show();
-	},
-	
-	pauseGif : function() {
-		GifPlugin.s.img.hide();
-	},
-};
-
-/*
- * Plugin to embed Gifvs from imgur.com 
- */
-GifvPlugin = {
-	s : {
-		regex   : /^(http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
-		video   : false,
-	},
-	
-	recogniseURL : function(url) {
-		var match = url.match(GifvPlugin.s.regex);
-		
-		if (match) {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	
-	// Gets ID of Imgur Gifv
-	getImgurID : function(url) {
-		return url.match(GifvPlugin.s.regex)[2];
-	},
-	
-	embedGif : function(url, wrapper) {
-		var video = document.createElement('video'),
-		source1   = document.createElement('source'),
-		source2   = document.createElement('source'),
-		imgurID   = GifvPlugin.getImgurID(url),
-		srcBase   = 'http://i.imgur.com/' + imgurID;
-		
-		// ADD FAILURE TEXT
-		
-		video.loop     = true;
-		video.muted    = true;
-		
-		source1.type = 'video/webm';
-		source1.src  = srcBase + '.webm';
-		
-		source2.type = 'video/mp4';
-		source2.src  = srcBase + '.mp4';
-		
-		
-		video.appendChild(source1);
-		video.appendChild(source2);
-		
-		video.addEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
-		
-		GifvPlugin.s.video = video;
-		
-		wrapper[0].appendChild(video);
-	},
-	
-	// When browser thinks video is sufficiently buffered for continuous playback
-	videoBuffered() {
-		GifvPlugin.s.video.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
-		
-		GifSound.gifReady();
-	},
-	
-	playGif() {
-		GifvPlugin.s.video.play();
-	},
-	
-	pauseGif() {
-		GifvPlugin.s.video.pause();
-	},
-};
-
+// Handles the display area and thus the current gif and sound plugins
 GifSound = {
 	s : {
 		soundPlugins   : [YTPlugin],
