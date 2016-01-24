@@ -160,7 +160,7 @@ GifPlugin = {
  */
 GifvPlugin = {
 	s : {
-		regex   : /^(http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
+		regex   : /^(?:http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
 		video   : false,
 	},
 	
@@ -176,7 +176,7 @@ GifvPlugin = {
 	
 	// Gets ID of Imgur Gifv
 	getImgurID : function(url) {
-		return url.match(GifvPlugin.s.regex)[2];
+		return url.match(GifvPlugin.s.regex)[1];
 	},
 	
 	embedGif : function(url, wrapper) {
