@@ -289,3 +289,18 @@ input#sound-start-time {
 		transform: scale(1);
 	}
 }
+
+/* Fork Me GitHub repo link */
+
+img#fork-me {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: 0;
+}
+
+@media only screen and (max-width : 767px) {
+	img#fork-me {
+		display: none;
+	}
+}
