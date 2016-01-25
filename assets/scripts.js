@@ -322,7 +322,7 @@ YTPlugin = {
 	},
 	
 	embedSoundByURL : function(url, wrapper, startTime) {
-		YTPlugin.embedYouTubeVideo(getVideoID(url), wrapper, startTime);
+		YTPlugin.embedYouTubeVideo(YTPlugin.getVideoID(url), wrapper, startTime);
 	},
 	
 	embedYouTubeVideo : function(videoID, wrapper, startTime) {
