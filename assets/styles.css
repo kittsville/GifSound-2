@@ -58,11 +58,11 @@ img#fork-me {
 	}
 }
 
+/* Display Styling */
+
 #display {
 	min-height: 500px;
 }
-
-/* Display Styling */
 
 #gif-area, #sound-area {
 	display: inline-block;
