@@ -257,7 +257,7 @@ YTPlugin = {
 	recogniseURL : function(url) {
 		var match = url.match(YTPlugin.s.regex);
 		
-		if (match&&match[1].length == 11) {
+		if (match) {
 			YTPlugin.s.videoID = match[1];
 			return true;
 		} else {
