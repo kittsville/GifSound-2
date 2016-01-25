@@ -410,8 +410,6 @@ YTPlugin = {
 	onError : function(event) {
 		var explanation;
 		
-		console.log(event);
-		
 		switch (event.data) {
 			case 2:
 				explanation = "Invalid Video ID (you shouldn't be able to see this error)"
