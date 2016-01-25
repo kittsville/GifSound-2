@@ -79,7 +79,7 @@ TheForm = {
 		
 		startTime = parseInt(startTime);
 		
-		if (startTime === NaN) {
+		if (isNaN(startTime)) {
 			startTime = 0;
 		}
 		
@@ -455,7 +455,7 @@ GifSound = {
 			} else if (!foundStartTime && param[0] === 'st') {
 				startTime = parseInt(param[1]);
 				
-				if (startTime === NaN) {
+				if isNaN(startTime) {
 					startTime = 0;
 				}
 			}
