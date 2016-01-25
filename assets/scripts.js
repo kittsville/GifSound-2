@@ -471,7 +471,7 @@ GifSound = {
 		}
 		
 		TheGif.embedGifByParam(gifParam, GifSound.s.gifWrapper);
-		TheSound.embedSoundByParam(soundParam, GifSound.s.soundWrapper);
+		TheSound.embedSoundByParam(soundParam, GifSound.s.soundWrapper, startTime);
 	},
 	
 	gifLoading : function() {
