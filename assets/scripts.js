@@ -19,6 +19,7 @@ TheForm = {
 		startTimeInput : $('input#sound-start-time'),
 		makeButton     : $('a#make-gifsound'),
 		urlSanitizer   : /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g, // Via stackoverflow.com/a/205967/3565450
+		httpDetector   : /^(?:http|https):\/\//i // Checks if URL starts with http:// or https://
 	},
 	
 	init: function() {
@@ -48,54 +49,58 @@ TheForm = {
 		GifSound.s.gifReady   = false;
 		GifSound.s.soundReady = false;
 		
-		TheForm.processSoundURL(TheForm.s.soundInput.val(), TheForm.s.startTimeInput.val());
-		TheForm.processGifURL(TheForm.s.gifInput.val());
-	},
-	
-	sanitizeURL : function(url) {
-		return url.replace(TheForm.s.urlSanitizer, '');
-	},
-	
-	processGifURL : function(gifURL) {
-		gifURL = TheForm.sanitizeURL(gifURL);
-		
-		$.each(GifSound.s.gifPlugins, function(i, plugin) {
-			if (plugin.recogniseURL(gifURL)) {
-				TheGif = plugin;
-				return true;
-			}
-		});
-		
-		if (typeof TheGif === 'object') {
-			GifSound.gifLoading();
-			TheGif.embedGifByURL(gifURL, GifSound.s.gifWrapper);
-		} else {
-			throw "I don't have a media plugin that can handle that gif URL";
-		}
-	},
-	
-	processSoundURL : function(soundURL, startTime) {
-		soundURL = TheForm.sanitizeURL(soundURL);
-		
-		startTime = parseInt(startTime);
+		var gifURL            = TheForm.processURL(TheForm.s.gifInput.val()),
+		soundURL              = TheForm.processURL(TheForm.s.soundInput.val()),
+		startTime             = parseInt(TheForm.s.startTimeInput.val()),
+		foundGifPlugin        = false,
+		foundSoundPlugin      = false;
 		
 		if (isNaN(startTime)) {
 			startTime = 0;
 		}
 		
-		$.each(GifSound.s.soundPlugins, function(i, plugin) {
-			if (plugin.recogniseURL(soundURL)) {
-				TheSound = plugin;
-				return true;
+		$.each(GifSound.s.gifPlugins, function(i, plugin) {
+			if (plugin.recogniseURL(gifURL)) {
+				TheGif         = plugin;
+				foundGifPlugin = true;
+				return false;
 			}
 		});
 		
-		if (typeof TheSound === 'object') {
-			GifSound.soundLoading();
-			TheSound.embedSoundByURL(soundURL, GifSound.s.soundWrapper, startTime);
-		} else {
-			throw "I don't have a media plugin that can handle that audio URL";
+		if (!foundGifPlugin) {
+			GifSound.gifFailed('No plugin could handle the given URL. Try using Imgur');
+			return;
 		}
+		
+		$.each(GifSound.s.soundPlugins, function(i, plugin) {
+			if (plugin.recogniseURL(soundURL)) {
+				TheSound         = plugin;
+				foundSoundPlugin = true;
+				return false;
+			}
+		});
+		
+		if (!foundSoundPlugin) {
+			GifSound.soundFailed('No plugin could handle the given URL. Try using YouTube');
+			return;
+		}
+		
+		GifSound.gifLoading();
+		GifSound.soundLoading();
+		
+		TheGif.embedGifByURL(gifURL, GifSound.s.gifWrapper);
+		TheSound.embedSoundByURL(soundURL, GifSound.s.soundWrapper, startTime);
+	},
+	
+	// Sanitizes and fixes URL
+	processURL : function(url) {
+		url = url.replace(TheForm.s.urlSanitizer, '');
+		
+		if (!url.match(TheForm.s.httpDetector)) {
+			url = 'http://' + url;
+		}
+		
+		return url;
 	},
 };
 
