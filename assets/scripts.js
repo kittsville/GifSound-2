@@ -455,7 +455,7 @@ GifSound = {
 			} else if (!foundStartTime && param[0] === 'st') {
 				startTime = parseInt(param[1]);
 				
-				if isNaN(startTime) {
+				if (isNaN(startTime)) {
 					startTime = 0;
 				}
 			}
