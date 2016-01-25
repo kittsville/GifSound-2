@@ -76,6 +76,18 @@ img#fork-me {
 	background-color: #9B2D2D;
 }
 
+#notifications a:link {
+	color: #9391E6;
+}
+
+#notifications a:active {
+	color: #000000;
+}
+
+#notifications a:visited {
+	color: #A2A2A2;
+}
+
 /* Display Styling */
 
 #display {
