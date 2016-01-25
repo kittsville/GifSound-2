@@ -114,7 +114,7 @@ TheForm = {
  */
 GifPlugin = {
 	s : {
-		regex   : /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:gif))(?:\?([^#]*))?(?:#(.*))?/, // Via http://stackoverflow.com/a/169631/3565450
+		regex   : /^(?:http|https):?(?:\/\/[^\/?#]*)?(?:[^?#]*\.(?:gif))(?:\?([^#]*))?(?:#(.*))?/, // Via http://stackoverflow.com/a/169631/3565450
 		img     : false,
 	},
 	
