@@ -531,10 +531,12 @@ GifSound = {
 	},
 	
 	gifFailed : function(optionalMessage) {
+		GifSound.s.gifSpinner.hide();
 		UserNotifications.displayError('Gif failed to load: ' + optionalMessage);
 	},
 	
 	soundFailed : function(optionalMessage) {
+		GifSound.s.soundSpinner.hide();
 		UserNotifications.displayError('Sound failed to load: ' + optionalMessage);
 	},
 };
