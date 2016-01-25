@@ -43,6 +43,21 @@ h1, p {
 	margin: 0px;
 }
 
+/* Fork Me GitHub repo link */
+
+img#fork-me {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: 0;
+}
+
+@media only screen and (max-width : 767px) {
+	img#fork-me {
+		display: none;
+	}
+}
+
 #display {
 	min-height: 500px;
 }
@@ -287,20 +302,5 @@ input#sound-start-time {
 	} 40% {
 		-webkit-transform: scale(1);
 		transform: scale(1);
-	}
-}
-
-/* Fork Me GitHub repo link */
-
-img#fork-me {
-	position: absolute;
-	top: 0;
-	right: 0;
-	border: 0;
-}
-
-@media only screen and (max-width : 767px) {
-	img#fork-me {
-		display: none;
 	}
 }
