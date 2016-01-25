@@ -68,7 +68,7 @@ TheForm = {
 		
 		if (typeof TheGif === 'object') {
 			GifSound.gifLoading();
-			TheGif.embedGif(gifURL, GifSound.s.gifWrapper);
+			TheGif.embedGifByURL(gifURL, GifSound.s.gifWrapper);
 		} else {
 			throw "I don't have a media plugin that can handle that gif URL";
 		}
@@ -92,7 +92,7 @@ TheForm = {
 		
 		if (typeof TheSound === 'object') {
 			GifSound.soundLoading();
-			TheSound.embedSound(soundURL, GifSound.s.soundWrapper, startTime);
+			TheSound.embedSoundByURL(soundURL, GifSound.s.soundWrapper, startTime);
 		} else {
 			throw "I don't have a media plugin that can handle that audio URL";
 		}
@@ -102,10 +102,11 @@ TheForm = {
 /*
  * GIF PLUGINS
  * All gif plugins must have the following methods:
- * recogniseURL - Given a URL returns true or false if it can handle that URL
- * embedGif     - Embed appropriate gif player (Webm player, <img> tag, etc.) set to be PAUSED
- * playGif      - Plays embedded gif
- * pauseGif     - Pauses embedded gif
+ * recogniseURL    - Given a URL returns true or false if it can handle that URL
+ * embedGifByURL   - Given a URL it can process, embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
+ * embedGifByParam - Given a string (of unknown usability), embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
+ * playGif         - Plays embedded gif
+ * pauseGif        - Pauses embedded gif
  */
 
 /*
@@ -128,7 +129,17 @@ GifPlugin = {
 		}
 	},
 	
-	embedGif : function(url, wrapper) {
+	embedGifByParam : function(url, wrapper) {
+		url = 'http://' + url;
+		
+		if (GifPlugin.recogniseURL(url)) {
+			GifPlugin.embedGifByURL(url, wrapper);
+		} else {
+			GifSound.gifFailed("Didn't recognise a URL");
+		}
+	},
+	
+	embedGifByURL : function(url, wrapper) {
 		GifPlugin.s.img = $('<img/>',{src:url});
 		
 		GifPlugin.s.img.hide();
@@ -161,6 +172,7 @@ GifPlugin = {
 GifvPlugin = {
 	s : {
 		regex   : /^(?:http|https):\/\/i\.imgur\.com\/([a-zA-Z0-9]{5,8})\.gifv/,
+		IDRegex : /^[a-zA-Z0-9]{5,8}$/,
 		video   : false,
 	},
 	
@@ -174,16 +186,40 @@ GifvPlugin = {
 		}
 	},
 	
-	// Gets ID of Imgur Gifv
+	recogniseImgurID : function(ID) {
+		var match = ID.match(GifvPlugin.s.IDRegex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	// Given an Imgur URL, returns image ID
 	getImgurID : function(url) {
 		return url.match(GifvPlugin.s.regex)[1];
 	},
 	
-	embedGif : function(url, wrapper) {
+	// Given an Imgur URL, embeds gifv player to given wrapper
+	embedGifByURL : function(url, wrapper) {
+		GifvPlugin.embedGifByImgurID(GifvPlugin.getImgurID(url), wrapper);
+	},
+	
+	// If ID contains an Imgur image ID, embeds gifv player to wrapper
+	embedGifByParam : function(ID, wrapper) {
+		if (GifvPlugin.recogniseImgurID(ID)) {
+			GifvPlugin.embedGifByImgurID(ID, wrapper);
+		} else {
+			GifSound.gifFailed('Not an Imgur.com image ID')
+		}
+	},
+	
+	// Embeds gifv player of given Imgur image ID to wrapper
+	embedGifByImgurID : function(imgurID, wrapper) {
 		var video = document.createElement('video'),
 		source1   = document.createElement('source'),
 		source2   = document.createElement('source'),
-		imgurID   = GifvPlugin.getImgurID(url),
 		srcBase   = 'http://i.imgur.com/' + imgurID;
 		
 		// ADD FAILURE TEXT
@@ -227,10 +263,11 @@ GifvPlugin = {
 /*
  * SOUND PLUGINS
  * All sound plugins must have the following methods:
- * recogniseURL - Given a URL returns true or false if it can handle that URL
- * embedSound   - Embed appropriate sound player (YouTube embed, <audio> tag, etc.) set to be PAUSED
- * playSound    - Plays embedded sound
- * pauseSound   - Pauses embedded sound
+ * recogniseURL      - Given a URL returns true or false if it can handle that URL
+ * embedSoundByURL   - Given a URL, embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
+ * embedSoundByParam - Given a string (of dubious usability), embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
+ * playSound         - Plays embedded sound
+ * pauseSound        - Pauses embedded sound
  */
 
 /*
@@ -238,7 +275,8 @@ GifvPlugin = {
  */
 YTPlugin = {
 	s : {
-		regex     : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
+		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
+		IDRegex   : /^[a-zA-Z0-9_-]{11}$/,
 		videoId   : '',    // .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
@@ -250,12 +288,12 @@ YTPlugin = {
 	
 	// Gets video ID of YouTube URL
 	getVideoID : function(url) {
-		return url.match(YTPlugin.s.regex)[1];
+		return url.match(YTPlugin.s.URLRegex)[1];
 	},
 	
 	// Checks if URL matches a YouTube video
 	recogniseURL : function(url) {
-		var match = url.match(YTPlugin.s.regex);
+		var match = url.match(YTPlugin.s.URLRegex);
 		
 		if (match) {
 			YTPlugin.s.videoID = match[1];
@@ -265,13 +303,34 @@ YTPlugin = {
 		}
 	},
 	
-	embedSound : function(url, wrapper, startTime) {
+	recogniseYouTubeID(ID) {
+		var match = ID.match(YTPlugin.s.IDRegex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	embedSoundByParam : function(videoID, wrapper, startTime) {
+		if (YTPlugin.recogniseYouTubeID(videoID)) {
+			YTPlugin.embedYouTubeVideo(videoID, wrapper, startTime);
+		} else {
+			GifSound.soundFailed('Not a valid YouTube video ID');
+		}
+	},
+	
+	embedSoundByURL : function(url, wrapper, startTime) {
+		YTPlugin.embedYouTubeVideo(getVideoID(url), wrapper, startTime);
+	},
+	
+	embedYouTubeVideo : function(videoID, wrapper, startTime) {
 		// Resets variable changed if video has been previously embedded
 		YTPlugin.s.firstPlay = true;
 		YTPlugin.s.player    = false;
 		
-		
-		YTPlugin.s.videoId   = YTPlugin.getVideoID(url);
+		YTPlugin.s.videoId   = videoID;
 		YTPlugin.s.startTime = startTime;
 		YTPlugin.s.wrapper   = wrapper;
 		
@@ -347,8 +406,13 @@ YTPlugin = {
 // Handles the display area and thus the current gif and sound plugins
 GifSound = {
 	s : {
-		soundPlugins   : [YTPlugin],
-		gifPlugins     : [GifPlugin, GifvPlugin],
+		gifPlugins     : {
+			'gif'  : GifPlugin,
+			'gifv' : GifvPlugin,
+		},
+		soundPlugins   : {
+			'yt'   : YTPlugin,
+		},
 		soundWrapper   : $('div#sound-wrapper'),
 		gifWrapper     : $('div#gif-wrapper'),
 		soundReady     : false,
@@ -357,6 +421,57 @@ GifSound = {
 		soundSpinner   : $('div#sound-loading'),
 		gifReadyText   : $('p#gif-loaded'),
 		soundReadyText : $('p#sound-loaded'),
+	},
+	
+	init : function() {
+		// If there's no parameters there's no GifSound to make
+		if (!location.search) {
+			return;
+		}
+		
+		var i            = 0,
+		foundSoundPlugin = false,
+		foundGifPlugin   = false,
+		foundStartTime   = false,
+		paramBlocks      = location.search.substring(1).split('&'), // Parses URL parameters into 'foo=bar' strings
+		startTime        = 0,
+		gifParam,
+		soundParam;
+		
+		// Tries matching URL parameters to gif and sound plugins
+		while (paramBlocks[i] && !(foundGifPlugin && foundSoundPlugin && foundStartTime)) {
+			var param = paramBlocks[i].split('=', 2);
+			
+			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(param[0])) {
+				foundGifPlugin = true;
+				
+				TheGif   = GifSound.s.gifPlugins[param[0]];
+				gifParam = param[1];
+			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(param[0])) {
+				foundSoundPlugin = true;
+				
+				TheSound   = GifSound.s.soundPlugins[param[0]];
+				soundParam = param[1];
+			} else if (!foundStartTime && param[0] === 'st') {
+				startTime = parseInt(param[1]);
+				
+				if (startTime === NaN) {
+					startTime = 0;
+				}
+			}
+			
+			++i;
+		}
+		
+		if (!foundGifPlugin || !foundSoundPlugin) {
+			// Will be replaced with proper media handling
+			console.log('Failed to find an appropriate media plugin');
+			
+			return;
+		}
+		
+		TheGif.embedGifByParam(gifParam, GifSound.s.gifWrapper);
+		TheSound.embedSoundByParam(soundParam, GifSound.s.soundWrapper);
 	},
 	
 	gifLoading : function() {
@@ -402,9 +517,18 @@ GifSound = {
 			TheGif.playGif();
 			TheSound.playSound();
 		}
-	}
+	},
+	
+	gifFailed : function(optionalMessage) {
+		console.log('Gif failed to load' + optionalMessage);
+	},
+	
+	soundFailed : function(optionalMessage) {
+		console.log('Sound failed to load' + optionalMessage);
+	},
 };
 
+GifSound.init();
 TheForm.init();
 
 });
