@@ -7,7 +7,7 @@
  * If you think any of this sucks then please fork it.
  * I continue to suck at JavaScript I just can't stop writing it.
  */
-var TheGif, TheSound, TheForm, GifSound;
+var TheGif, TheSound, TheForm, GifSound, UserNotifications;
 
 $(function(){
 
@@ -38,6 +38,8 @@ TheForm = {
 		GifSound.s.gifReadyText.hide();
 		GifSound.s.soundSpinner.hide();
 		GifSound.s.soundReadyText.hide();
+		
+		UserNotifications.clearNotifications();
 		
 		// Clears previous embeds, if necessary
 		if (typeof TheGif === 'object' | typeof TheSound === 'object') {
@@ -469,8 +471,7 @@ GifSound = {
 		}
 		
 		if (!foundGifPlugin || !foundSoundPlugin) {
-			// Will be replaced with proper media handling
-			console.log('Failed to find an appropriate media plugin');
+			UserNotifications.displayError('Failed to find an appropriate media plugin');
 			
 			return;
 		}
@@ -525,11 +526,44 @@ GifSound = {
 	},
 	
 	gifFailed : function(optionalMessage) {
-		console.log('Gif failed to load' + optionalMessage);
+		UserNotifications.displayError('Gif failed to load: ' + optionalMessage);
 	},
 	
 	soundFailed : function(optionalMessage) {
-		console.log('Sound failed to load' + optionalMessage);
+		UserNotifications.displayError('Sound failed to load: ' + optionalMessage);
+	},
+};
+
+UserNotifications = {
+	s : {
+		notificationArea : $('div#notifications'),
+		displaying       : false,
+	},
+	
+	clearNotifications() {
+		if (UserNotifications.s.displaying) {
+			UserNotifications.s.notificationArea.html('');
+			UserNotifications.s.displaying = false;
+		}
+	},
+	
+	displayError : function(errorMessage) {
+		UserNotifications.appendNotification(errorMessage, 'error');
+	},
+	
+	displayMessage : function(message) {
+		UserNotifications.appendNotification(message, 'notification');
+	},
+	
+	appendNotification : function(message, type) {
+		var notification = document.createElement('p');
+		
+		notification.classList.add(type);
+		notification.innerHTML = message;
+		
+		UserNotifications.s.notificationArea[0].appendChild(notification);
+		
+		UserNotifications.s.displaying = true;
 	},
 };
 

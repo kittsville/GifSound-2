@@ -58,6 +58,24 @@ img#fork-me {
 	}
 }
 
+/* Notifications */
+
+#notifications p {
+	max-width: 800px;
+	margin: 5px auto;
+	border-radius: 4px;
+	padding: 4px;
+	color: #F9F9F9;
+}
+
+#notifications p.notification {
+	background-color: #656565;
+}
+
+#notifications p.error {
+	background-color: #9B2D2D;
+}
+
 /* Display Styling */
 
 #display {
