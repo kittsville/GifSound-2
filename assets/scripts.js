@@ -154,7 +154,7 @@ GifPlugin = {
 		wrapper.html(GifPlugin.s.img);
 		
 		GifPlugin.s.img.one('load',  GifSound.gifReady);
-		GifPlugin.s.img.one('error', GifPlugin.gifFailed);
+		GifPlugin.s.img.one('error', GifPlugin.onError);
 		
 		/*
 		 * Cache fix for browsers that don't trigger 'load'. Thanks Nick Craver:
@@ -165,7 +165,7 @@ GifPlugin = {
 		}
 	},
 	
-	gifFailed : function () {
+	onError : function () {
 		GifSound.gifFailed('Trying visiting <a href="' + GifPlugin.s.img[0].src + '">the gif</a> directly');
 	},
 	
