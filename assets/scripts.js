@@ -383,6 +383,7 @@ YTPlugin = {
 			events       : {
 				'onReady'       : YTPlugin.onPlayerReady,
 				'onStateChange' : YTPlugin.playerStateChange,
+				'onError'       : YTPlugin.onError,
 			},
 		});
 	},
@@ -404,6 +405,38 @@ YTPlugin = {
 		} else {
 			setTimeout(YTPlugin.readyWhenLoaded, 600);
 		}
+	},
+	
+	onError : function(event) {
+		var explanation;
+		
+		console.log(event);
+		
+		switch (event.data) {
+			case 2:
+				explanation = "Invalid Video ID (you shouldn't be able to see this error)"
+			break;
+			
+			case 5:
+				explanation = 'HTML5 YouTube player error';
+			break;
+			
+			case 100:
+				explanation = 'Video not found (removed or private). Probably copyright takedown';
+			break;
+			
+			// 150 is the same as 101. It's just a 101 error in disguise!
+			case 101:
+			case 150:
+				explanation = 'Video owner not allowing it to be played in embedded players';
+			break;
+			
+			default:
+				explanation = 'Something really, REALLY, bad must have happened';
+			break;
+		}
+		
+		GifSound.soundFailed(explanation);
 	},
 	
 	playSound : function() {
