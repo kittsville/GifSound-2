@@ -110,7 +110,7 @@ img#fork-me {
 	margin-left: 20px;
 }
 
-/* Gif Styling */
+/* Gif Display Area */
 
 #gif-area {
 	position: relative;
@@ -126,6 +126,8 @@ img#fork-me {
 	max-height: 600px;
 	max-width: 1000px;
 }
+
+/* Form */
 
 form#gifsound-input {
 	background-color: #6D6D6D;
@@ -170,7 +172,7 @@ input#sound-start-time {
 	width: 30px;
 }
 
-/* Waiting */
+/* Loaded and waiting */
 
 #gif-loaded, #sound-loaded {
 	display: none;
