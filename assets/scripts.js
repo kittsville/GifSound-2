@@ -232,9 +232,8 @@ GifvPlugin = {
 		var video = document.createElement('video'),
 		source1   = document.createElement('source'),
 		source2   = document.createElement('source'),
+		failure   = document.createElement('p'),
 		srcBase   = 'http://i.imgur.com/' + imgurID;
-		
-		// ADD FAILURE TEXT
 		
 		video.loop     = true;
 		video.muted    = true;
@@ -245,9 +244,11 @@ GifvPlugin = {
 		source2.type = 'video/mp4';
 		source2.src  = srcBase + '.mp4';
 		
+		failure.innerHTML = 'Gifv failed to load';		
 		
 		video.appendChild(source1);
 		video.appendChild(source2);
+		video.appendChild(failure);
 		
 		video.addEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
 		
