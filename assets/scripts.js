@@ -466,10 +466,10 @@ GifSound = {
 		soundPlugins   : {
 			'yt'   : YTPlugin,
 		},
-		soundWrapper   : $('div#sound-wrapper'),
 		gifWrapper     : $('div#gif-wrapper'),
-		soundReady     : false,
+		soundWrapper   : $('div#sound-wrapper'),
 		gifReady       : false,
+		soundReady     : false,
 		gifSpinner     : $('div#gif-loading'),
 		soundSpinner   : $('div#sound-loading'),
 		gifReadyText   : $('p#gif-loaded'),
@@ -531,6 +531,11 @@ GifSound = {
 		GifSound.s.gifSpinner.show();
 	},
 	
+	soundLoading: function() {
+		GifSound.s.soundWrapper.hide();
+		GifSound.s.soundSpinner.show();
+	},
+	
 	gifReady : function() {
 		console.log('Gif Ready');
 		
@@ -539,11 +544,6 @@ GifSound = {
 		GifSound.s.gifReadyText.show();
 		
 		GifSound.playIfSynced();
-	},
-	
-	soundLoading: function() {
-		GifSound.s.soundWrapper.hide();
-		GifSound.s.soundSpinner.show();
 	},
 	
 	soundReady : function() {
