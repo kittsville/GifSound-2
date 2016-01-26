@@ -251,9 +251,18 @@ GifvPlugin = {
 		
 		video.addEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
 		
+		// If 2nd source (the last one) fails then 1st source has already failed
+		source2.addEventListener('error', GifvPlugin.videoError, false);
+		
 		GifvPlugin.s.video = video;
 		
 		wrapper[0].appendChild(video);
+	},
+	
+	videoError(event) {
+		event.target.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
+		
+		GifSound.gifFailed('Maybe it was deleted?');
 	},
 	
 	// When browser thinks video is sufficiently buffered for continuous playback
