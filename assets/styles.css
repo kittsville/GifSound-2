@@ -1,6 +1,7 @@
 /*
  * Before you ask: Yes, I have a fetish for rounded corners and it's a serious problem
- * Credit for keeping footer down: Joss (http: //www.cssreset.com/2010/css-tutorials/how-to-keep-footer-at-bottom-of-page-with-css/) */
+ * Credit for keeping footer down: Joss (http: //www.cssreset.com/2010/css-tutorials/how-to-keep-footer-at-bottom-of-page-with-css/)
+ */
 html, body {
 	background: #F1F1F1;
 	color: #2F2F2F;
@@ -43,7 +44,9 @@ h1, p {
 	margin: 0px;
 }
 
-/* Fork Me GitHub repo link */
+/*
+ * Fork Me GitHub repo link
+ */
 
 img#fork-me {
 	position: absolute;
@@ -58,7 +61,9 @@ img#fork-me {
 	}
 }
 
-/* Notifications */
+/*
+ * Notifications
+ */
 
 #notifications p {
 	max-width: 800px;
@@ -88,7 +93,9 @@ img#fork-me {
 	color: #A2A2A2;
 }
 
-/* Display Styling */
+/*
+ * Gif/sound Display Styling
+ */
 
 #display {
 	min-height: 500px;
@@ -127,7 +134,9 @@ img#fork-me {
 	max-width: 1000px;
 }
 
-/* Form */
+/*
+ * GifSound creation form
+ */
 
 form#gifsound-input {
 	background-color: #6D6D6D;
@@ -188,7 +197,7 @@ input#sound-start-time {
 	width: 100%;
 }
 
-/* Spinners
+/* Spinners (displays while gif/sound loads)
  * Source: https://github.com/tobiasahlin/SpinKit
  * License: MIT
  */
