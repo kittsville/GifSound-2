@@ -467,7 +467,7 @@ GifSound = {
 			display : $('#sound-area > .display'),
 			error   : $('#sound-area > .error'),
 		},
-		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text or the gif itself
+		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text, the gif itself or an error
 		soundState     : 'blank',
 		gifWrapper     : $('#gif-wrapper'),
 		soundWrapper   : $('#sound-wrapper'),
