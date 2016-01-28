@@ -447,45 +447,39 @@ YTPlugin = {
 };
 
 ThePage = {
+	s : {
+		matchComplexCharacters : /[^a-zA-Z0-9=&-]/ // Strips inappropriate characters from URL parameters
+	},
+	
 	init : function() {
 		// If there's no parameters there's no GifSound to make
 		if (!location.search) {
 			return;
 		}
 		
-		var i            = 0,
-		foundSoundPlugin = false,
+		var gifPlugin, soundPlugin, gifID, soundID, startTime,
+		URLParams        = ThePage.readURLParams(location.search.substring(1)),
 		foundGifPlugin   = false,
-		foundStartTime   = false,
-		paramBlocks      = location.search.substring(1).split('&'), // Parses URL parameters into 'foo=bar' strings
-		startTime        = 0,
-		gifParam,
-		soundParam;
+		foundSoundPlugin = false,
+		foundStartTime   = false;
 		
-		// Tries matching URL parameters to gif and sound plugins
-		while (paramBlocks[i] && !(foundGifPlugin && foundSoundPlugin && foundStartTime)) {
-			var param = paramBlocks[i].split('=', 2);
-			
-			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(param[0])) {
+		$.each(URLParams, function(paramName, paramValue) {
+			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(paramName)) {
 				foundGifPlugin = true;
 				
-				TheGif   = GifSound.s.gifPlugins[param[0]];
-				gifParam = param[1];
-			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(param[0])) {
+				TheGif = GifSound.s.gifPlugins[paramName];
+				gifID  = paramValue;
+			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(paramName)) {
 				foundSoundPlugin = true;
 				
-				TheSound   = GifSound.s.soundPlugins[param[0]];
-				soundParam = param[1];
-			} else if (!foundStartTime && param[0] === 'st') {
-				startTime = parseInt(param[1]);
+				TheSound = GifSound.s.soundPlugins[paramName];
+				soundID  = paramValue;
+			} else if (!foundStartTime && paramName === 'st') {
+				foundStartTime = true;
 				
-				if (isNaN(startTime)) {
-					startTime = 0;
-				}
+				startTime = parseInt(paramValue);
 			}
-			
-			++i;
-		}
+		});
 		
 		if (!foundGifPlugin || !foundSoundPlugin) {
 			UserNotifications.displayError('Failed to find an appropriate media plugin');
@@ -493,8 +487,30 @@ ThePage = {
 			return;
 		}
 		
-		TheGif.embedGifByParam(gifParam, GifSound.s.gifWrapper);
-		TheSound.embedSoundByParam(soundParam, GifSound.s.soundWrapper, startTime);
+		if (typeof startTime === 'undefined' || isNaN(startTime)) {
+			startTime = 0;
+		}
+		
+		TheGif.embedGifByParam(gifID, GifSound.s.gifWrapper);
+		TheSound.embedSoundByParam(soundID, GifSound.s.soundWrapper, startTime);
+	},
+	
+	// Turns URL parameters into key/value pairs
+	readURLParams : function(paramsString) {
+		paramsString = paramsString.replace(ThePage.s.matchComplexCharacters, '');
+		
+		var paramObject = {},
+		paramStrings    = paramsString.split('&');
+		
+		paramStrings.forEach(function(singleParam) {
+			var param = singleParam.split('=', 2);
+			
+			if (param.length == 2 && param[0] && param[1]) {
+				paramObject[param[0]] = param[1];
+			}
+		});
+		
+		return paramObject;
 	},
 };
 
