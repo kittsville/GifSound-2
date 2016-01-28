@@ -3,11 +3,12 @@
  * TheGif       - Handles the embedded animation (gif, gifv, webm, etc.)
  * TheSound     - Handles the embedded audio (YouTube, SoundCloud, Vocaroo, mp3 file, etc.)
  * TheForm      - Handles the forms elements and its submission
+ * ThePage      - Handles reading and writing GifSound parameters to the URL
  * GifSound     - Handles the whole page and calling relevant objects from above
  * If you think any of this sucks then please fork it.
  * I continue to suck at JavaScript I just can't stop writing it.
  */
-var TheGif, TheSound, TheForm, GifSound, UserNotifications;
+var TheGif, TheSound, TheForm, ThePage, GifSound, UserNotifications;
 
 $(function(){
 
@@ -445,36 +446,7 @@ YTPlugin = {
 	},
 };
 
-// Handles the display area and thus the current gif and sound plugins
-GifSound = {
-	s : {
-		gifPlugins     : {
-			'gif'  : GifPlugin,
-			'gifv' : GifvPlugin,
-		},
-		soundPlugins   : {
-			'yt'   : YTPlugin,
-		},
-		gifStates      : {
-			loading : $('#gif-area > .loading'),
-			ready   : $('#gif-area > .ready'),
-			display : $('#gif-area > .display'),
-			error   : $('#gif-area > .error'),
-		},
-		soundStates    : {
-			loading : $('#sound-area > .loading'),
-			ready   : $('#sound-area > .ready'),
-			display : $('#sound-area > .display'),
-			error   : $('#sound-area > .error'),
-		},
-		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text, the gif itself or an error
-		soundState     : 'blank',
-		gifWrapper     : $('#gif-wrapper'),
-		soundWrapper   : $('#sound-wrapper'),
-		gifReady       : false,
-		soundReady     : false,
-	},
-	
+ThePage = {
 	init : function() {
 		// If there's no parameters there's no GifSound to make
 		if (!location.search) {
@@ -523,6 +495,37 @@ GifSound = {
 		
 		TheGif.embedGifByParam(gifParam, GifSound.s.gifWrapper);
 		TheSound.embedSoundByParam(soundParam, GifSound.s.soundWrapper, startTime);
+	},
+};
+
+// Handles the display area and thus the current gif and sound plugins
+GifSound = {
+	s : {
+		gifPlugins     : {
+			'gif'  : GifPlugin,
+			'gifv' : GifvPlugin,
+		},
+		soundPlugins   : {
+			'yt'   : YTPlugin,
+		},
+		gifStates      : {
+			loading : $('#gif-area > .loading'),
+			ready   : $('#gif-area > .ready'),
+			display : $('#gif-area > .display'),
+			error   : $('#gif-area > .error'),
+		},
+		soundStates    : {
+			loading : $('#sound-area > .loading'),
+			ready   : $('#sound-area > .ready'),
+			display : $('#sound-area > .display'),
+			error   : $('#sound-area > .error'),
+		},
+		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text, the gif itself or an error
+		soundState     : 'blank',
+		gifWrapper     : $('#gif-wrapper'),
+		soundWrapper   : $('#sound-wrapper'),
+		gifReady       : false,
+		soundReady     : false,
 	},
 	
 	// Clears gif/sound embeds
@@ -728,7 +731,7 @@ UserNotifications = {
 	},
 };
 
-GifSound.init();
+ThePage.init();
 TheForm.init();
 
 });
