@@ -98,40 +98,65 @@ img#fork-me {
  */
 
 #display {
-	min-height: 500px;
+	margin: 15px auto;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#display p {
+	width: 100%;
 }
 
 #gif-area, #sound-area {
 	display: inline-block;
 	vertical-align: top;
-}
-
-#sound-wrapper, #gif-wrapper {
-	z-index: 1;
-}
-
-#sound-area { 
+	min-width: 300px;
+	min-height: 300px;
+	max-width: 600px;
+	max-height: 600px;
 	position: relative;
-	height: 300px;
-	width: 300px;
-	margin-left: 20px;
 }
 
-/* Gif Display Area */
-
-#gif-area {
-	position: relative;
-	width: 400px;
-	height: 400px;
-	margin-right: 20px;
-}
-
-#gif-wrapper img {
+.display-state {
+	display: none;
+	align-items: center;
 	width: 100%;
 	height: 100%;
-	min-height: 250px;
-	max-height: 600px;
-	max-width: 1000px;
+}
+
+.display-state.current-state {
+	display: flex;
+}
+
+.loading-wrap { 
+	margin: auto;
+}
+
+#gif-area > div:not(.display), #sound-area > div:not(.display) {
+	z-index : 15;
+	position: absolute;
+}
+
+.display {
+	z-index: 5;
+}
+
+#sound-cover {
+	display: flex;
+	align-items: center;
+	z-index: 10;
+	background-color: #F7F7F7;
+	transition: opacity .25s ease-in-out;
+	pointer-events: none;
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#sound-area:hover #sound-cover {
+	opacity: 0;
 }
 
 /*
@@ -181,29 +206,13 @@ input#sound-start-time {
 	width: 30px;
 }
 
-/* Loaded and waiting */
-
-#gif-loaded, #sound-loaded {
-	display: none;
-	margin-top: 240px; /* Lines up with Loading text because spinner: 100px + 100px + 40px */
-}
-
-/* Loading Spinners */
-
-#gif-loading, #sound-loading {
-	display: none;
-	z-index: 2;
-	position: absolute;
-	width: 100%;
-}
-
 /* Spinners (displays while gif/sound loads)
  * Source: https://github.com/tobiasahlin/SpinKit
  * License: MIT
  */
 
 .sk-circle {
-	margin: 100px auto;
+	margin: 20px auto;
 	width: 40px;
 	height: 40px;
 	position: relative;

@@ -455,14 +455,22 @@ GifSound = {
 		soundPlugins   : {
 			'yt'   : YTPlugin,
 		},
-		gifWrapper     : $('div#gif-wrapper'),
-		soundWrapper   : $('div#sound-wrapper'),
-		gifSpinner     : $('div#gif-loading'),
-		soundSpinner   : $('div#sound-loading'),
-		gifReadyText   : $('p#gif-loaded'),
-		soundReadyText : $('p#sound-loaded'),
-		gifDisplay     : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text or the gif itself
-		soundDisplay   : 'blank',
+		gifStates      : {
+			loading : $('#gif-area > .loading'),
+			ready   : $('#gif-area > .ready'),
+			display : $('#gif-area > .display'),
+			error   : $('#gif-area > .error'),
+		},
+		soundStates    : {
+			loading : $('#sound-area > .loading'),
+			ready   : $('#sound-area > .ready'),
+			display : $('#sound-area > .display'),
+			error   : $('#sound-area > .error'),
+		},
+		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text or the gif itself
+		soundState     : 'blank',
+		gifWrapper     : $('#gif-wrapper'),
+		soundWrapper   : $('#sound-wrapper'),
 		gifReady       : false,
 		soundReady     : false,
 	},
@@ -533,21 +541,25 @@ GifSound = {
 	},
 	
 	setGifState : function(newState) {
-		if (newState === GifSound.s.gifDisplay) {
+		if (newState === GifSound.s.gifState) {
 			return;
 		}
 		
-		switch (GifSound.s.gifDisplay) {
+		switch (GifSound.s.gifState) {
 			case 'loading':
-				GifSound.s.gifSpinner.hide();
+				GifSound.s.gifStates.loading.removeClass('current-state');
 			break;
 			
 			case 'ready':
-				GifSound.s.gifReadyText.hide();
+				GifSound.s.gifStates.ready.removeClass('current-state');
 			break;
 			
-			case 'displaying':
-				GifSound.s.gifWrapper.hide();
+			case 'display':
+				GifSound.s.gifStates.display.removeClass('current-state');
+			break;
+			
+			case 'error':
+				GifSound.s.gifStates.error.removeClass('current-state');
 			break;
 		}
 		
@@ -557,15 +569,19 @@ GifSound = {
 			break;
 			
 			case 'loading':
-				GifSound.s.gifSpinner.show();
+				GifSound.s.gifStates.loading.addClass('current-state');
 			break;
 			
 			case 'ready':
-				GifSound.s.gifReadyText.show();
+				GifSound.s.gifStates.ready.addClass('current-state');
 			break;
 			
-			case 'displaying':
-				GifSound.s.gifWrapper.show();
+			case 'display':
+				GifSound.s.gifStates.display.addClass('current-state');
+			break;
+			
+			case 'error':
+				GifSound.s.gifStates.error.addClass('current-state');
 			break;
 			
 			default:
@@ -573,26 +589,30 @@ GifSound = {
 			break;
 		}
 		
-		GifSound.s.gifDisplay = newState;
+		GifSound.s.gifState = newState;
 	},
 	
 	setSoundState : function(newState) {
-		if (newState === GifSound.s.soundDisplay) {
+		if (newState === GifSound.s.soundState) {
 			return;
 		}
 		
 		// Cleans up last state
-		switch (GifSound.s.soundDisplay) {
+		switch (GifSound.s.soundState) {
 			case 'loading':
-				GifSound.s.soundSpinner.hide();
+				GifSound.s.soundStates.loading.removeClass('current-state');
 			break;
 			
 			case 'ready':
-				GifSound.s.soundReadyText.hide();
+				GifSound.s.soundStates.ready.removeClass('current-state');
 			break;
 			
-			case 'displaying':
-				GifSound.s.soundWrapper.hide();
+			case 'display':
+				GifSound.s.soundStates.display.removeClass('current-state');
+			break;
+			
+			case 'error':
+				GifSound.s.soundStates.error.removeClass('current-state');
 			break;
 		}
 		
@@ -603,15 +623,19 @@ GifSound = {
 			break;
 			
 			case 'loading':
-				GifSound.s.soundSpinner.show();
+				GifSound.s.soundStates.loading.addClass('current-state');
 			break;
 			
 			case 'ready':
-				GifSound.s.soundReadyText.show();
+				GifSound.s.soundStates.ready.addClass('current-state');
 			break;
 			
-			case 'displaying':
-				GifSound.s.soundWrapper.show();
+			case 'display':
+				GifSound.s.soundStates.display.addClass('current-state');
+			break;
+			
+			case 'error':
+				GifSound.s.soundStates.error.addClass('current-state');
 			break;
 			
 			default:
@@ -619,7 +643,7 @@ GifSound = {
 			break;
 		}
 		
-		GifSound.s.soundDisplay = newState;
+		GifSound.s.soundState = newState;
 	},
 	
 	gifLoading : function() {
@@ -652,8 +676,8 @@ GifSound = {
 		if (GifSound.s.gifReady && GifSound.s.soundReady) {
 			console.log('Gif and Sound are synced');
 			
-			GifSound.setGifState('displaying');
-			GifSound.setSoundState('displaying');
+			GifSound.setGifState('display');
+			GifSound.setSoundState('display');
 			
 			TheGif.playGif();
 			TheSound.playSound();
@@ -661,12 +685,12 @@ GifSound = {
 	},
 	
 	gifFailed : function(optionalMessage) {
-		GifSound.setGifState('blank');
+		GifSound.setGifState('error');
 		UserNotifications.displayError('Gif failed to load: ' + optionalMessage);
 	},
 	
 	soundFailed : function(optionalMessage) {
-		GifSound.setSoundState('blank');
+		GifSound.setSoundState('error');
 		UserNotifications.displayError('Sound failed to load: ' + optionalMessage);
 	},
 };

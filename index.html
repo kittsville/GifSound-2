@@ -57,49 +57,74 @@
 	<div id="content">
 		<div id="display">
 			<div id="gif-area">
-				<div id="gif-loading">
-					<div class="sk-circle">
-						<div class="sk-circle1 sk-child"></div>
-						<div class="sk-circle2 sk-child"></div>
-						<div class="sk-circle3 sk-child"></div>
-						<div class="sk-circle4 sk-child"></div>
-						<div class="sk-circle5 sk-child"></div>
-						<div class="sk-circle6 sk-child"></div>
-						<div class="sk-circle7 sk-child"></div>
-						<div class="sk-circle8 sk-child"></div>
-						<div class="sk-circle9 sk-child"></div>
-						<div class="sk-circle10 sk-child"></div>
-						<div class="sk-circle11 sk-child"></div>
-						<div class="sk-circle12 sk-child"></div>
+				<div class="loading display-state">
+					<div class="loading-wrap">
+						<div class="sk-circle">
+							<div class="sk-circle1 sk-child"></div>
+							<div class="sk-circle2 sk-child"></div>
+							<div class="sk-circle3 sk-child"></div>
+							<div class="sk-circle4 sk-child"></div>
+							<div class="sk-circle5 sk-child"></div>
+							<div class="sk-circle6 sk-child"></div>
+							<div class="sk-circle7 sk-child"></div>
+							<div class="sk-circle8 sk-child"></div>
+							<div class="sk-circle9 sk-child"></div>
+							<div class="sk-circle10 sk-child"></div>
+							<div class="sk-circle11 sk-child"></div>
+							<div class="sk-circle12 sk-child"></div>
+						</div>
+						<p>Loading gif...</p>
+						<!-- Balances vertical positioning -->
+						<div class="sk-circle"></div>
 					</div>
-					<p>Loading gif...</p>
 				</div>
-				<p id="gif-loaded">Ready, waiting for sound</p>
-				<div id="gif-wrapper">
-					<!-- First of all, I'm not a wrapper -->
+				<div class="ready display-state">
+					<p>Ready, waiting for sound</p>
+				</div>
+				<div class="display display-state">
+					<div id="gif-wrapper">
+						<!-- Gif embeds here -->
+					</div>
+				</div>
+				<div class="error display-state">
+					<p>Something went wrong :/</p>
 				</div>
 			</div>
 			<div id="sound-area">
-				<div id="sound-loading">
-					<div class="sk-circle">
-						<div class="sk-circle1 sk-child"></div>
-						<div class="sk-circle2 sk-child"></div>
-						<div class="sk-circle3 sk-child"></div>
-						<div class="sk-circle4 sk-child"></div>
-						<div class="sk-circle5 sk-child"></div>
-						<div class="sk-circle6 sk-child"></div>
-						<div class="sk-circle7 sk-child"></div>
-						<div class="sk-circle8 sk-child"></div>
-						<div class="sk-circle9 sk-child"></div>
-						<div class="sk-circle10 sk-child"></div>
-						<div class="sk-circle11 sk-child"></div>
-						<div class="sk-circle12 sk-child"></div>
+				<div class="loading display-state">
+					<div class="loading-wrap">
+						<div class="sk-circle">
+							<div class="sk-circle1 sk-child"></div>
+							<div class="sk-circle2 sk-child"></div>
+							<div class="sk-circle3 sk-child"></div>
+							<div class="sk-circle4 sk-child"></div>
+							<div class="sk-circle5 sk-child"></div>
+							<div class="sk-circle6 sk-child"></div>
+							<div class="sk-circle7 sk-child"></div>
+							<div class="sk-circle8 sk-child"></div>
+							<div class="sk-circle9 sk-child"></div>
+							<div class="sk-circle10 sk-child"></div>
+							<div class="sk-circle11 sk-child"></div>
+							<div class="sk-circle12 sk-child"></div>
+						</div>
+						<p>Loading Sound...</p>
+						<!-- Balances vertical positioning -->
+						<div class="sk-circle"></div>
 					</div>
-					<p>Loading Sound...</p>
 				</div>
-				<p id="sound-loaded">Ready, waiting for gif</p>
-				<div id="sound-wrapper">
-					
+				<div class="ready display-state">
+					<p>Ready, waiting for gif</p>
+				</div>
+				<div class="display display-state">
+					<div id="sound-cover">
+						<p>Hover to reveal sound</p>
+					</div>
+					<div id="sound-wrapper">
+						<!-- Sound embeds here -->
+					</div>
+				</div>
+				<div class="error display-state">
+					<p>Something went wrong :/</p>
 				</div>
 			</div>
 		</div>
