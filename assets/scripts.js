@@ -474,8 +474,6 @@ ThePage = {
 	
 	// Turns URL parameters into key/value pairs
 	readURLParams : function(paramsString) {
-		paramsString = paramsString.replace(ThePage.s.matchComplexCharacters, '');
-		
 		var paramObject = {},
 		paramStrings    = paramsString.split('&');
 		
@@ -483,7 +481,7 @@ ThePage = {
 			var param = singleParam.split('=', 2);
 			
 			if (param.length == 2 && param[0] && param[1]) {
-				paramObject[param[0]] = param[1];
+				paramObject[param[0]] = decodeURIComponent(param[1]).replace(ThePage.s.matchComplexCharacters, '');
 			}
 		});
 		
