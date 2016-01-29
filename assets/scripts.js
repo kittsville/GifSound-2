@@ -302,7 +302,9 @@ YTPlugin = {
 		YTPlugin.s.startTime = startTime;
 		YTPlugin.s.wrapper   = wrapper;
 		
-		if (YTPlugin.s.apiLoaded) {
+		if (YTPlugin.s.player !== false) {
+			YTPlugin.s.player.loadVideoById(videoID, startTime);
+		} else if (YTPlugin.s.apiLoaded) {
 			YTPlugin.loadVideo();
 		} else if (!YTPlugin.s.apiLoading) {
 			YTPlugin.s.apiLoading = true;
