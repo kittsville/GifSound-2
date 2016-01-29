@@ -408,7 +408,7 @@ YTPlugin = {
 
 ThePage = {
 	s : {
-		matchComplexCharacters : /[^a-zA-Z0-9=&-]/ // Strips inappropriate characters from URL parameters
+		matchComplexCharacters : /[^a-zA-Z0-9=&\-.]/ // Strips inappropriate characters from URL parameters
 	},
 	
 	init : function() {
