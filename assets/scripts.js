@@ -445,13 +445,13 @@ ThePage = {
 			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(paramName) && GifSound.s.gifPlugins[paramName].verifyParam(paramValue)) {
 				foundGifPlugin = true;
 				
-				TheGif = GifSound.s.gifPlugins[paramName];
-				gifID  = paramValue;
+				gifPlugin = paramName;
+				gifID     = paramValue;
 			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(paramName) && GifSound.s.soundPlugins[paramName].verifyParam(paramValue)) {
 				foundSoundPlugin = true;
 				
-				TheSound = GifSound.s.soundPlugins[paramName];
-				soundID  = paramValue;
+				soundPlugin = paramName;
+				soundID     = paramValue;
 			} else if (!foundStartTime && paramName === 'st') {
 				foundStartTime = true;
 				
