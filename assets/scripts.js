@@ -320,7 +320,10 @@ YTPlugin = {
 	onAPIReady : function() {
 		YTPlugin.s.apiLoaded  = true;
 		YTPlugin.s.apiLoading = false;
-		YTPlugin.loadVideo();
+		
+		if (YTPlugin === TheSound) {
+			YTPlugin.loadVideo();
+		}
 	},
 	
 	// Loads video via YT API. Assumes API has been loaded
