@@ -34,50 +34,48 @@ TheForm = {
 	formSubmission : function(event) {
 		event.preventDefault();
 		
-		GifSound.reset();
 		UserNotifications.clearNotifications();
 		
-		var gifURL            = TheForm.processURL(TheForm.s.gifInput.val()),
-		soundURL              = TheForm.processURL(TheForm.s.soundInput.val()),
-		startTime             = parseInt(TheForm.s.startTimeInput.val()),
-		foundGifPlugin        = false,
-		foundSoundPlugin      = false;
+		var gifID, soundID, gifPlugin, soundPlugin,
+		gifURL           = TheForm.processURL(TheForm.s.gifInput.val()),
+		soundURL         = TheForm.processURL(TheForm.s.soundInput.val()),
+		startTime        = parseInt(TheForm.s.startTimeInput.val()),
+		foundGifPlugin   = false,
+		foundSoundPlugin = false;
 		
 		if (isNaN(startTime)) {
 			startTime = 0;
 		}
 		
-		$.each(GifSound.s.gifPlugins, function(i, plugin) {
-			if (plugin.recogniseURL(gifURL)) {
-				TheGif         = plugin;
-				foundGifPlugin = true;
+		$.each(GifSound.s.gifPlugins, function(pluginName, plugin) {
+			gifID = plugin.recogniseURL(gifURL);
+			
+			if (gifID) {
+				gifPlugin = pluginName;
 				return false;
 			}
 		});
 		
-		if (!foundGifPlugin) {
+		if (typeof gifPlugin === 'undefined') {
 			GifSound.gifFailed('No plugin could handle the given URL. Try using Imgur');
 			return;
 		}
 		
-		$.each(GifSound.s.soundPlugins, function(i, plugin) {
-			if (plugin.recogniseURL(soundURL)) {
-				TheSound         = plugin;
-				foundSoundPlugin = true;
+		$.each(GifSound.s.soundPlugins, function(pluginName, plugin) {
+			soundID = plugin.recogniseURL(soundURL);
+			
+			if (soundID) {
+				soundPlugin = pluginName;
 				return false;
 			}
 		});
 		
-		if (!foundSoundPlugin) {
+		if (typeof soundPlugin === 'undefined') {
 			GifSound.soundFailed('No plugin could handle the given URL. Try using YouTube');
 			return;
 		}
 		
-		GifSound.gifLoading();
-		GifSound.soundLoading();
-		
-		TheGif.embedGifByURL(gifURL, GifSound.s.gifWrapper);
-		TheSound.embedSoundByURL(soundURL, GifSound.s.soundWrapper, startTime);
+		GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime);
 	},
 	
 	// Sanitizes and fixes URL
@@ -108,7 +106,7 @@ TheForm = {
  */
 GifPlugin = {
 	s : {
-		regex   : /^(?:http|https):\/\/(?:[^?#]*\.(?:gif))$/i, // Via http://stackoverflow.com/a/169631/3565450
+		regex   : /^(?:http|https):\/\/((?:[^?#]*\.(?:gif)))$/i, // Via http://stackoverflow.com/a/169631/3565450
 		img     : false,
 	},
 	
@@ -116,23 +114,23 @@ GifPlugin = {
 		var match = url.match(GifPlugin.s.regex);
 		
 		if (match) {
+			return match[1];
+		} else {
+			return false;
+		}
+	},
+	
+	verifyParam : function(url) {
+		if (('http://' + url).match(GifPlugin.s.regex)) {
 			return true;
 		} else {
 			return false;
 		}
 	},
 	
-	embedGifByParam : function(url, wrapper) {
+	embedGif : function(url, wrapper) {
 		url = 'http://' + url;
 		
-		if (GifPlugin.recogniseURL(url)) {
-			GifPlugin.embedGifByURL(url, wrapper);
-		} else {
-			GifSound.gifFailed("Didn't recognise a URL");
-		}
-	},
-	
-	embedGifByURL : function(url, wrapper) {
 		GifPlugin.s.img = $('<img/>',{src:url});
 		
 		GifPlugin.s.img.hide();
@@ -178,43 +176,22 @@ GifvPlugin = {
 		var match = url.match(GifvPlugin.s.regex);
 		
 		if (match) {
-			return true;
+			return match[1];
 		} else {
 			return false;
 		}
 	},
 	
-	recogniseImgurID : function(ID) {
-		var match = ID.match(GifvPlugin.s.IDRegex);
-		
-		if (match) {
+	verifyParam : function(ID) {
+		if (ID.match(GifvPlugin.s.IDRegex)) {
 			return true;
 		} else {
 			return false;
-		}
-	},
-	
-	// Given an Imgur URL, returns image ID
-	getImgurID : function(url) {
-		return url.match(GifvPlugin.s.regex)[1];
-	},
-	
-	// Given an Imgur URL, embeds gifv player to given wrapper
-	embedGifByURL : function(url, wrapper) {
-		GifvPlugin.embedGifByImgurID(GifvPlugin.getImgurID(url), wrapper);
-	},
-	
-	// If ID contains an Imgur image ID, embeds gifv player to wrapper
-	embedGifByParam : function(ID, wrapper) {
-		if (GifvPlugin.recogniseImgurID(ID)) {
-			GifvPlugin.embedGifByImgurID(ID, wrapper);
-		} else {
-			GifSound.gifFailed('Not an Imgur.com image ID')
 		}
 	},
 	
 	// Embeds gifv player of given Imgur image ID to wrapper
-	embedGifByImgurID : function(imgurID, wrapper) {
+	embedGif : function(imgurID, wrapper) {
 		var video = document.createElement('video'),
 		source1   = document.createElement('source'),
 		source2   = document.createElement('source'),
@@ -294,24 +271,19 @@ YTPlugin = {
 		apiLoaded : false, // Whether the YouTube IFrame Player API has been loaded
 	},
 	
-	// Gets video ID of YouTube URL
-	getVideoID : function(url) {
-		return url.match(YTPlugin.s.URLRegex)[1];
-	},
-	
 	// Checks if URL matches a YouTube video
 	recogniseURL : function(url) {
 		var match = url.match(YTPlugin.s.URLRegex);
 		
 		if (match) {
-			YTPlugin.s.videoID = match[1];
-			return true;
+			return match[1];
 		} else {
 			return false;
 		}
 	},
 	
-	recogniseYouTubeID(ID) {
+	// Verifies if a string (from a URL) matches the YouTube video ID format
+	verifyParam(ID) {
 		var match = ID.match(YTPlugin.s.IDRegex);
 		
 		if (match) {
@@ -321,19 +293,7 @@ YTPlugin = {
 		}
 	},
 	
-	embedSoundByParam : function(videoID, wrapper, startTime) {
-		if (YTPlugin.recogniseYouTubeID(videoID)) {
-			YTPlugin.embedYouTubeVideo(videoID, wrapper, startTime);
-		} else {
-			GifSound.soundFailed('Not a valid YouTube video ID');
-		}
-	},
-	
-	embedSoundByURL : function(url, wrapper, startTime) {
-		YTPlugin.embedYouTubeVideo(YTPlugin.getVideoID(url), wrapper, startTime);
-	},
-	
-	embedYouTubeVideo : function(videoID, wrapper, startTime) {
+	embedSound : function(videoID, wrapper, startTime) {
 		// Resets variable changed if video has been previously embedded
 		YTPlugin.s.firstPlay = true;
 		YTPlugin.s.player    = false;
@@ -464,12 +424,12 @@ ThePage = {
 		foundStartTime   = false;
 		
 		$.each(URLParams, function(paramName, paramValue) {
-			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(paramName)) {
+			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(paramName) && GifSound.s.gifPlugins[paramName].verifyParam(paramValue)) {
 				foundGifPlugin = true;
 				
 				TheGif = GifSound.s.gifPlugins[paramName];
 				gifID  = paramValue;
-			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(paramName)) {
+			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(paramName) && GifSound.s.soundPlugins[paramName].verifyParam(paramValue)) {
 				foundSoundPlugin = true;
 				
 				TheSound = GifSound.s.soundPlugins[paramName];
@@ -491,8 +451,7 @@ ThePage = {
 			startTime = 0;
 		}
 		
-		TheGif.embedGifByParam(gifID, GifSound.s.gifWrapper);
-		TheSound.embedSoundByParam(soundID, GifSound.s.soundWrapper, startTime);
+		GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime);
 	},
 	
 	// Turns URL parameters into key/value pairs
@@ -517,46 +476,59 @@ ThePage = {
 // Handles the display area and thus the current gif and sound plugins
 GifSound = {
 	s : {
-		gifPlugins     : {
+		gifPlugins         : {
 			'gif'  : GifPlugin,
 			'gifv' : GifvPlugin,
 		},
-		soundPlugins   : {
+		soundPlugins       : {
 			'yt'   : YTPlugin,
 		},
-		gifStates      : {
+		gifStates          : {
 			loading : $('#gif-area > .loading'),
 			ready   : $('#gif-area > .ready'),
 			display : $('#gif-area > .display'),
 			error   : $('#gif-area > .error'),
 		},
-		soundStates    : {
+		soundStates        : {
 			loading : $('#sound-area > .loading'),
 			ready   : $('#sound-area > .ready'),
 			display : $('#sound-area > .display'),
 			error   : $('#sound-area > .error'),
 		},
-		gifState       : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text, the gif itself or an error
-		soundState     : 'blank',
-		gifWrapper     : $('#gif-wrapper'),
-		soundWrapper   : $('#sound-wrapper'),
-		gifReady       : false,
-		soundReady     : false,
+		gifState           : 'blank',     // Whether the gif display is showing nothing, loading spinner, ready text, the gif itself or an error
+		soundState         : 'blank',
+		gifWrapper         : $('#gif-wrapper'),
+		soundWrapper       : $('#sound-wrapper'),
+		gifReady           : false,
+		soundReady         : false,
+		currentGifPlugin   : '',
+		currentSoundPlugin : '',
 	},
 	
-	// Clears gif/sound embeds
-	reset : function() {
-		GifSound.setGifState('blank');
-		GifSound.setSoundState('blank');
-		
-		// Clears previous embeds, if necessary
-		if (typeof TheGif === 'object' | typeof TheSound === 'object') {
-			GifSound.s.gifWrapper.html('');
-			GifSound.s.soundWrapper.html('');
-		}
+	createGifSound : function(gifID, videoID, gifPlugin, soundPlugin, startTime) {
+		GifSound.setGifState('loading');
+		GifSound.setSoundState('loading');
 		
 		GifSound.s.gifReady   = false;
 		GifSound.s.soundReady = false;
+		
+		// Only resets gif and sound areas if plugin has changed (allows plugin to reuse embed/iframe to save time)
+		if (gifPlugin !== GifSound.s.currentGifPlugin) {
+			GifSound.s.gifWrapper.html('');
+			
+			GifSound.s.currentGifPlugin = gifPlugin;
+			TheGif                      = GifSound.s.gifPlugins[gifPlugin];
+		}
+
+		if (soundPlugin !== GifSound.s.currentSoundPlugin) {
+			GifSound.s.soundWrapper.html('');
+			
+			GifSound.s.currentSoundPlugin = soundPlugin;
+			TheSound                      = GifSound.s.soundPlugins[soundPlugin];
+		}
+		
+		TheGif.embedGif(gifID, GifSound.s.gifWrapper);
+		TheSound.embedSound(videoID, GifSound.s.soundWrapper, startTime);
 	},
 	
 	setGifState : function(newState) {
@@ -663,14 +635,6 @@ GifSound = {
 		}
 		
 		GifSound.s.soundState = newState;
-	},
-	
-	gifLoading : function() {
-		GifSound.setGifState('loading');
-	},
-	
-	soundLoading: function() {
-		GifSound.setSoundState('loading');
 	},
 	
 	gifReady : function() {
