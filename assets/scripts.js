@@ -257,12 +257,13 @@ GifvPlugin = {
 
 /*
  * Embeds videos from YouTube.com
+ * Note: YouTube capitalises id as 'Id' while I use 'ID'
  */
 YTPlugin = {
 	s : {
 		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
 		IDRegex   : /^[a-zA-Z0-9_-]{11}$/,
-		videoId   : '',    // .e.g dQw4w9WgXcQ
+		videoID   : '',    // .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
 		wrapper   : false,
@@ -298,7 +299,7 @@ YTPlugin = {
 		YTPlugin.s.firstPlay = true;
 		YTPlugin.s.player    = false;
 		
-		YTPlugin.s.videoId   = videoID;
+		YTPlugin.s.videoID   = videoID;
 		YTPlugin.s.startTime = startTime;
 		YTPlugin.s.wrapper   = wrapper;
 		
@@ -330,7 +331,6 @@ YTPlugin = {
 		YTPlugin.s.player = new YT.Player('youtube-embed', {
 			height       : '300',
 			width        : '300',
-			videoId      : YTPlugin.s.videoId,
 			playerVars   : {
 				'autoplay'       : 1,
 				'controls'       : 1,
@@ -339,7 +339,6 @@ YTPlugin = {
 				'rel'            : 0, // Don't show related videos
 				'fs'             : 0, // Disallow fullscreen
 				'loop'           : 1,
-				'playlist'       : YTPlugin.s.videoId,
 				'start'          : YTPlugin.s.startTime,
 			},
 			events       : {
@@ -348,6 +347,8 @@ YTPlugin = {
 				'onError'       : YTPlugin.onError,
 			},
 		});
+			videoId      : YTPlugin.s.videoID,
+				'playlist'       : YTPlugin.s.videoID,
 	},
 	
 	playerStateChange : function(event) {
