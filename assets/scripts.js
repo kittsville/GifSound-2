@@ -371,22 +371,22 @@ YTPlugin = {
 		var explanation;
 		
 		switch (event.data) {
+			// If this error occurs then something fucked up with URL validation or in passing the video ID to this plugin
 			case 2:
-				explanation = "Invalid Video ID (you shouldn't be able to see this error)"
+				explanation = "Invalid YouTube Video ID (I should have caught this earlier, this is a bug)"
 			break;
 			
 			case 5:
 				explanation = 'HTML5 YouTube player error';
 			break;
 			
+			case 150:
 			case 100:
-				explanation = 'Video not found (removed or private). Probably copyright takedown';
+				explanation = 'Video not available. Probably copyright takedown';
 			break;
 			
-			// 150 is the same as 101. It's just a 101 error in disguise!
 			case 101:
-			case 150:
-				explanation = 'Video owner not allowing it to be played in embedded players';
+				explanation = 'Embedded playing of video not allowed';
 			break;
 			
 			default:
