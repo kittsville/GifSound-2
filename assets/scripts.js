@@ -272,6 +272,7 @@ YTPlugin = {
 	s : {
 		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
 		IDRegex   : /^[a-zA-Z0-9_-]{11}$/,
+		playerID  : 'youtube-embed',
 		videoID   : '',    // .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
@@ -337,12 +338,12 @@ YTPlugin = {
 	
 	// Loads video via YT API. Assumes API has been loaded
 	loadVideo : function() {
-		if (YTPlugin.s.player !== false) {
+		if (typeof TheSound.s.player === 'object' && document.getElementById(YTPlugin.s.playerID)) {
 			YTPlugin.s.player.loadVideoById(YTPlugin.s.videoID, YTPlugin.s.startTime);
 		} else {
-			YTPlugin.s.wrapper.html('<div id="youtube-embed"/>');
+			YTPlugin.s.wrapper.html('<div id="' + YTPlugin.s.playerID + '"/>');
 			
-			YTPlugin.s.player = new YT.Player('youtube-embed', {
+			YTPlugin.s.player = new YT.Player(YTPlugin.s.playerID, {
 				height       : '300',
 				width        : '300',
 				videoId      : YTPlugin.s.videoID,
