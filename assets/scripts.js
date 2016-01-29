@@ -75,7 +75,15 @@ TheForm = {
 			return;
 		}
 		
-		GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime);
+		/*
+		 * If the browser supports it, dynamically changes the current URL to the new GifSound
+		 * Otherwise reloads the page with the new GifSound as the URL
+		 */
+		if (ThePage.supportsHistory()) {
+			GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime, true);
+		} else {
+			ThePage.updateURL(gifID, soundID, gifPlugin, soundPlugin, startTime);
+		}
 	},
 	
 	// Sanitizes and fixes URL
@@ -417,7 +425,8 @@ YTPlugin = {
 
 ThePage = {
 	s : {
-		matchComplexCharacters : /[^a-zA-Z0-9=&\-.]/ // Strips inappropriate characters from URL parameters
+		matchComplexCharacters : /[^a-zA-Z0-9=&\-.]/, // Strips inappropriate characters from URL parameters
+		supportsHistory        : window.history && history.pushState,
 	},
 	
 	init : function() {
@@ -480,6 +489,33 @@ ThePage = {
 		
 		return paramObject;
 	},
+	
+	// If the URL can be dynamically changed via HTML5 History API
+	supportsHistory : function() {
+		return ThePage.s.supportsHistory;
+	},
+	
+	// Updates the current URL using either the HTML5 History API or just setting the URL forcing a page reload
+	updateURL : function(gifID, soundID, gifPlugin, soundPlugin, startTime) {
+		var params = {};
+		
+		params[gifPlugin]   = gifID;
+		params[soundPlugin] = soundID;
+		
+		if (startTime !== 0) {
+			params.st = startTime;
+		}
+		
+		var paramString = '?' + $.param(params, true);
+		
+		if (ThePage.s.supportsHistory) {
+			// Dynamically updates URL
+			history.pushState(params, '', paramString);
+		} else {
+			// Causes browser to reload
+			location.search = paramString;
+		}
+	},
 };
 
 // Handles the display area and thus the current gif and sound plugins
@@ -512,14 +548,22 @@ GifSound = {
 		soundReady         : false,
 		currentGifPlugin   : '',
 		currentSoundPlugin : '',
+		gifID              : '',
+		soundID            : '',
+		startTime          : 0,
+		updateURL          : false,
 	},
 	
-	createGifSound : function(gifID, soundID, gifPlugin, soundPlugin, startTime) {
+	createGifSound : function(gifID, soundID, gifPlugin, soundPlugin, startTime, updateURL) {
 		GifSound.setGifState('loading');
 		GifSound.setSoundState('loading');
 		
 		GifSound.s.gifReady   = false;
 		GifSound.s.soundReady = false;
+		
+		GifSound.s.gifID      = gifID;
+		GifSound.s.soundID    = soundID;
+		GifSound.s.startTime  = startTime;
 		
 		// Only resets gif and sound areas if plugin has changed (allows plugin to reuse embed/iframe to save time)
 		if (gifPlugin !== GifSound.s.currentGifPlugin) {
@@ -538,6 +582,19 @@ GifSound = {
 		
 		TheGif.embedGif(gifID, GifSound.s.gifWrapper);
 		TheSound.embedSound(soundID, GifSound.s.soundWrapper, startTime);
+		
+		if (typeof updateURL === 'boolean' && updateURL) {
+			GifSound.s.updateURL = true;
+		} else {
+			GifSound.s.updateURL = false;
+		}
+	},
+	
+	// Adds GifSound to page's URL parameters (if necessary)
+	updateURL : function() {
+		if (GifSound.s.updateURL) {
+			ThePage.updateURL(GifSound.s.gifID, GifSound.s.soundID, GifSound.s.currentGifPlugin, GifSound.s.currentSoundPlugin, GifSound.s.startTime);
+		}
 	},
 	
 	setGifState : function(newState) {
@@ -673,6 +730,9 @@ GifSound = {
 			
 			TheGif.playGif();
 			TheSound.playSound();
+			
+			// Adds GifSound to page's URL parameters (if necessary)
+			GifSound.updateURL();
 		}
 	},
 	
