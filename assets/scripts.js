@@ -590,6 +590,18 @@ GifSound = {
 		}
 	},
 	
+	// Clears GifSound area. Media plugins should never touch this
+	removeGifSound : function() {
+		GifSound.setGifState('blank');
+		GifSound.setSoundState('blank');
+		
+		GifSound.s.currentGifPlugin = '';
+		GifSound.s.currentSoundPlugin = '';
+		
+		GifSound.s.gifWrapper.html('');
+		GifSound.s.soundWrapper.html('');
+	},
+	
 	// Adds GifSound to page's URL parameters (if necessary)
 	updateURL : function() {
 		if (GifSound.s.updateURL) {
