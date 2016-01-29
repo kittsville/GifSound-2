@@ -228,6 +228,7 @@ GifvPlugin = {
 		
 		GifvPlugin.s.video = video;
 		
+		wrapper[0].innerHTML = '';
 		wrapper[0].appendChild(video);
 	},
 	
