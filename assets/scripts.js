@@ -377,7 +377,7 @@ YTPlugin = {
 		switch (event.data) {
 			// If this error occurs then something fucked up with URL validation or in passing the video ID to this plugin
 			case 2:
-				explanation = "Invalid YouTube Video ID (I should have caught this earlier, this is a bug)"
+				explanation = "Invalid YouTube Video ID (it's a bug if you can see this error)"
 			break;
 			
 			case 5:
