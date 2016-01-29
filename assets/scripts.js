@@ -514,7 +514,7 @@ GifSound = {
 		currentSoundPlugin : '',
 	},
 	
-	createGifSound : function(gifID, videoID, gifPlugin, soundPlugin, startTime) {
+	createGifSound : function(gifID, soundID, gifPlugin, soundPlugin, startTime) {
 		GifSound.setGifState('loading');
 		GifSound.setSoundState('loading');
 		
@@ -537,7 +537,7 @@ GifSound = {
 		}
 		
 		TheGif.embedGif(gifID, GifSound.s.gifWrapper);
-		TheSound.embedSound(videoID, GifSound.s.soundWrapper, startTime);
+		TheSound.embedSound(soundID, GifSound.s.soundWrapper, startTime);
 	},
 	
 	setGifState : function(newState) {
