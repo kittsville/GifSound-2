@@ -297,15 +297,12 @@ YTPlugin = {
 	embedSound : function(videoID, wrapper, startTime) {
 		// Resets variable changed if video has been previously embedded
 		YTPlugin.s.firstPlay = true;
-		YTPlugin.s.player    = false;
 		
 		YTPlugin.s.videoID   = videoID;
 		YTPlugin.s.startTime = startTime;
 		YTPlugin.s.wrapper   = wrapper;
 		
-		if (YTPlugin.s.player !== false) {
-			YTPlugin.s.player.loadVideoById(videoID, startTime);
-		} else if (YTPlugin.s.apiLoaded) {
+		if (YTPlugin.s.apiLoaded) {
 			YTPlugin.loadVideo();
 		} else if (!YTPlugin.s.apiLoading) {
 			YTPlugin.s.apiLoading = true;
@@ -326,29 +323,33 @@ YTPlugin = {
 	
 	// Loads video via YT API. Assumes API has been loaded
 	loadVideo : function() {
-		YTPlugin.s.wrapper.html('<div id="youtube-embed"/>');
-		
-		YTPlugin.s.player = new YT.Player('youtube-embed', {
-			height       : '300',
-			width        : '300',
-			playerVars   : {
-				'autoplay'       : 1,
-				'controls'       : 1,
-				'modestbranding' : 1, // Removes some YT branding
-				'showinfo'       : 0, // Don't show video info (at top of embed)
-				'rel'            : 0, // Don't show related videos
-				'fs'             : 0, // Disallow fullscreen
-				'loop'           : 1,
-				'start'          : YTPlugin.s.startTime,
-			},
-			events       : {
-				'onReady'       : YTPlugin.onPlayerReady,
-				'onStateChange' : YTPlugin.playerStateChange,
-				'onError'       : YTPlugin.onError,
-			},
-		});
-			videoId      : YTPlugin.s.videoID,
-				'playlist'       : YTPlugin.s.videoID,
+		if (YTPlugin.s.player !== false) {
+			YTPlugin.s.player.loadVideoById(YTPlugin.s.videoID, YTPlugin.s.startTime);
+		} else {
+			YTPlugin.s.wrapper.html('<div id="youtube-embed"/>');
+			
+			YTPlugin.s.player = new YT.Player('youtube-embed', {
+				height       : '300',
+				width        : '300',
+				videoId      : YTPlugin.s.videoID,
+				playerVars   : {
+					'autoplay'       : 1,
+					'controls'       : 1,
+					'modestbranding' : 1, // Removes some YT branding
+					'showinfo'       : 0, // Don't show video info (at top of embed)
+					'rel'            : 0, // Don't show related videos
+					'fs'             : 0, // Disallow fullscreen
+					'loop'           : 1,
+					'playlist'       : YTPlugin.s.videoID,
+					'start'          : YTPlugin.s.startTime,
+				},
+				events       : {
+					'onReady'       : YTPlugin.onPlayerReady,
+					'onStateChange' : YTPlugin.playerStateChange,
+					'onError'       : YTPlugin.onError,
+				},
+			});
+		}
 	},
 	
 	playerStateChange : function(event) {
