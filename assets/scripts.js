@@ -313,12 +313,14 @@ YTPlugin = {
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 			
-			window.onYouTubeIframeAPIReady = function() {
-				YTPlugin.s.apiLoaded  = true;
-				YTPlugin.s.apiLoading = false;
-				YTPlugin.loadVideo();
-			}
+			window.onYouTubeIframeAPIReady = YTPlugin.onAPIReady;
 		}
+	},
+	
+	onAPIReady : function() {
+		YTPlugin.s.apiLoaded  = true;
+		YTPlugin.s.apiLoading = false;
+		YTPlugin.loadVideo();
 	},
 	
 	// Loads video via YT API. Assumes API has been loaded
