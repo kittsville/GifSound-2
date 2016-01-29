@@ -432,13 +432,20 @@ ThePage = {
 	},
 	
 	init : function() {
-		// If there's no parameters there's no GifSound to make
-		if (!location.search) {
-			return;
-		}
+		window.onpopstate = ThePage.handleBrowserNavigation;
 		
+		if (location.search) {
+			if (ThePage.s.supportsHistory && history.state !== null) {
+				ThePage.gifSoundFromParams(history.state);
+			} else {
+				ThePage.gifSoundFromParams(ThePage.readURLParams(location.search.substring(1)));
+			}
+		}
+	},
+	
+	// Creates GifSound from parameters object
+	gifSoundFromParams : function(URLParams) {
 		var gifPlugin, soundPlugin, gifID, soundID, startTime,
-		URLParams        = ThePage.readURLParams(location.search.substring(1)),
 		foundGifPlugin   = false,
 		foundSoundPlugin = false,
 		foundStartTime   = false;
@@ -490,6 +497,16 @@ ThePage = {
 		return paramObject;
 	},
 	
+	handleBrowserNavigation : function(event) {
+		UserNotifications.clearNotifications();
+		console.log(event);
+		if (event.state !== null) {
+			ThePage.gifSoundFromParams(event.state);
+		} else {
+			GifSound.removeGifSound();
+		}
+	},
+	
 	// If the URL can be dynamically changed via HTML5 History API
 	supportsHistory : function() {
 		return ThePage.s.supportsHistory;
@@ -509,8 +526,10 @@ ThePage = {
 		var paramString = '?' + $.param(params, true);
 		
 		if (ThePage.s.supportsHistory) {
-			// Dynamically updates URL
-			history.pushState(params, '', paramString);
+			// Dynamically updates URL but only if it's a new page
+			if (paramString !== location.search) {
+				history.pushState(params, '', paramString);
+			}
 		} else {
 			// Causes browser to reload
 			location.search = paramString;
