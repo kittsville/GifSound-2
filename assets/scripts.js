@@ -425,6 +425,175 @@ YTPlugin = {
 	},
 };
 
+/*
+ * Embeds audio from SoundCloud.com
+ * I hate this plugin so much
+ * Check #20 before asking questions/forking this:
+ * https://github.com/kittsville/GifSound-2/issues/20
+ */
+SCPlugin = {
+	s : {
+		URLRegex   : /^(?:https|http):\/\/(?:(soundcloud\.com\/[a-z0-9\-_]{3,255}\/[a-z0-9\-_]{3,255})|(snd\.sc\/[a-z0-9]{6,7}))$/i,
+		IDRegex    : /^[0-9]{8,10}$/,
+		clientID   : 'dd2c702d213d9564881d266576fe80d0',
+		trackID    : '',
+		gotTrackID : false,
+		startTime  : 0,
+		apiLoaded  : false,
+		player     : false,
+		iFrame     : false,
+		wrapper    : false,
+		playerID   : 'sc-embed',
+		firstPlay  : true,
+	},
+	
+	recogniseURL : function(url) {
+		var match = url.match(SCPlugin.s.URLRegex);
+		
+		if (match) {
+			return match[1];
+		} else {
+			return false;
+		}
+	},
+	
+	verifyParam : function(ID) {
+		var match = ID.match(SCPlugin.s.IDRegex);
+		
+		if (match) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	embedSound : function(soundID, wrapper, startTime) {
+		SCPlugin.s.startTime  = startTime;
+		SCPlugin.s.wrapper    = wrapper;
+		SCPlugin.s.trackID    = soundID;
+		SCPlugin.s.gotTrackID = SCPlugin.verifyParam(soundID);
+		SCPlugin.s.firstPlay  = true;
+		
+		if (SCPlugin.s.apiLoaded && SCPlugin.s.gotTrackID) {
+			SCPlugin.loadSound();
+		}
+		
+		if (!SCPlugin.s.apiLoaded) {
+			jQuery.ajax({
+				dataType : "script",
+				cache    : true,
+				url      : 'https://w.soundcloud.com/player/api.js',
+				complete : SCPlugin.loadedAPI
+			});
+		}
+		
+		// Checks if plugin has been passed track ID '241851698' or track URL 'iamsorryforwhatihavedone/dogg-simulator'
+		if (!SCPlugin.verifyParam(soundID)) {
+			var params = $.param({
+				client_id : SCPlugin.s.clientID,
+				url       : 'http://' + soundID,
+			}, true);
+			
+			$.ajax({
+				url      : 'http://api.soundcloud.com/resolve.json?' + params,
+				cache    : true,
+				dataType : 'json',
+				complete : SCPlugin.recievedTrackID,
+			});
+		}
+	},
+	
+	// Handles SoundCloud API response to resolving a track's URL to its numeric ID
+	recievedTrackID : function(response) {
+		if (response.status === 200) {
+			SCPlugin.s.gotTrackID = true;
+			SCPlugin.s.trackID    = response.responseJSON.id;
+			
+			// Checks if the GifSound's changed while the script's been loading
+			if (TheSound === SCPlugin && SCPlugin.s.apiLoaded) {
+				GifSound.updateSoundID(SCPlugin.s.trackID);
+				
+				SCPlugin.loadSound();
+			}
+		} else {
+			GifSound.gifFailed('SoundCloud API Error ' + response.status + ' (' + response.statusText + ')');
+		}
+	},
+	
+	loadedAPI : function(xhr, status) {
+		if (status === 'success') {
+			SCPlugin.s.apiLoaded = true;
+			
+			// Checks if the GifSound's changed while the script's been loading
+			if (TheSound === SCPlugin && SCPlugin.s.gotTrackID) {
+				SCPlugin.loadSound();
+			}
+		} else {
+			GifSound.soundFailed("Couldn't load SoundCloud API"); 
+		}
+	},
+	
+	loadSound : function() {
+		// If player already exists (last GifSound played used SoundCloud)
+		if (typeof SCPlugin.s.player === 'object' && document.getElementById(SCPlugin.s.playerID)) {
+			console.log('repurposing existing embed');
+			SCPlugin.s.player.load('https://api.soundcloud.com/tracks/' + SCPlugin.s.trackID);
+		} else {
+			var iFrame         = document.createElement('iframe');
+			
+			iFrame.id          = SCPlugin.s.playerID;
+			iFrame.src         = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + SCPlugin.s.trackID;
+			iFrame.width       = '100%';
+			iFrame.height      = '300px';
+			iFrame.scrolling   = 'no';
+			iFrame.frameBorder = '0';
+			
+			SCPlugin.s.wrapper[0].innerHTML = '';
+			SCPlugin.s.wrapper[0].appendChild(iFrame);
+			
+			SCPlugin.s.player = SC.Widget(SCPlugin.s.playerID);
+			
+			SCPlugin.s.player.bind(SC.Widget.Events.READY, SCPlugin.embedReady);
+			SCPlugin.s.player.bind(SC.Widget.Events.ERROR, SCPlugin.onPlayerError);
+		}
+	},
+	
+	onPlayerError : function() {
+		GifSound.soundFailed('SoundCloud embed failed');
+		
+		SCPlugin.s.wrapper[0].innerHTML = '';
+	},
+	
+	embedReady : function() {
+		if (SCPlugin.s.startTime === 0) {
+			GifSound.soundReady();
+		} else {
+			SCPlugin.s.player.bind(SC.Widget.Events.PLAY_PROGRESS, function(){
+				SCPlugin.s.player.unbind(SC.Widget.Events.PLAY_PROGRESS);
+				SCPlugin.s.player.bind(SC.Widget.Events.PLAY_PROGRESS, SCPlugin.embedReadyAtStartTime);
+				
+				SCPlugin.s.player.seekTo(SCPlugin.s.startTime * 1000);
+			});
+			
+			SCPlugin.s.player.play();
+		}
+	},
+	
+	embedReadyAtStartTime(data) {
+		SCPlugin.s.player.unbind(SC.Widget.Events.PLAY_PROGRESS);
+		SCPlugin.s.player.pause();
+		setTimeout(GifSound.soundReady, 500);
+	},
+	
+	playSound : function() {
+		SCPlugin.s.player.play();
+	},
+	
+	pauseSound : function() {
+		SCPlugin.s.player.pause();
+	},
+};
+
 ThePage = {
 	s : {
 		matchComplexCharacters : /[^a-zA-Z0-9=&\-.\/%]/, // Strips inappropriate characters from URL parameters
@@ -548,6 +717,7 @@ GifSound = {
 		},
 		soundPlugins       : {
 			'yt'   : YTPlugin,
+			'sc'   : SCPlugin,
 		},
 		gifStates          : {
 			loading : $('#gif-area > .loading'),
