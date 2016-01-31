@@ -175,7 +175,7 @@ GifPlugin = {
  */
 GifvPlugin = {
 	s : {
-		regex   : /^(?:http|https):\/\/(?:i\.)?imgur\.com\/([a-z0-9]{5,8})(?:\.gifv)?$/i,
+		regex   : /^(?:http|https):\/\/(?:i\.)?imgur\.com\/([a-z0-9]{5,8})(?:\.gifv|\.gif)?$/i,
 		IDRegex : /^[a-zA-Z0-9]{5,8}$/,
 		video   : false,
 	},
@@ -712,8 +712,8 @@ ThePage = {
 GifSound = {
 	s : {
 		gifPlugins         : {
-			'gif'  : GifPlugin,
 			'gifv' : GifvPlugin,
+			'gif'  : GifPlugin,
 		},
 		soundPlugins       : {
 			'yt'   : YTPlugin,
