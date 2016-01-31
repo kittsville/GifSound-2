@@ -630,6 +630,14 @@ GifSound = {
 		}
 	},
 	
+	updateGifID : function(gifID) {
+		GifSound.s.gifID = gifID;
+	},
+	
+	updateSoundID : function(soundID) {
+		GifSound.s.soundID = soundID;
+	},
+	
 	setGifState : function(newState) {
 		if (newState === GifSound.s.gifState) {
 			return;
