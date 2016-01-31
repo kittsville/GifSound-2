@@ -206,8 +206,8 @@ GifvPlugin = {
 		failure   = document.createElement('p'),
 		srcBase   = 'http://i.imgur.com/' + imgurID;
 		
-		video.loop     = true;
-		video.muted    = true;
+		video.loop   = true;
+		video.muted  = true;
 		
 		source1.type = 'video/webm';
 		source1.src  = srcBase + '.webm';
