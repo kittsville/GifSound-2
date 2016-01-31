@@ -451,6 +451,8 @@ ThePage = {
 		foundStartTime   = false;
 		
 		$.each(URLParams, function(paramName, paramValue) {
+			paramValue = String(paramValue);
+			
 			if (!foundGifPlugin && GifSound.s.gifPlugins.hasOwnProperty(paramName) && GifSound.s.gifPlugins[paramName].verifyParam(paramValue)) {
 				foundGifPlugin = true;
 				
