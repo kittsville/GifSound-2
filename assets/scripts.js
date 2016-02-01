@@ -36,7 +36,7 @@ TheForm = {
 		
 		UserNotifications.clearNotifications();
 		
-		var gifID, soundID, gifPlugin, soundPlugin,
+		var gifId, soundId, gifPlugin, soundPlugin,
 		gifURL           = TheForm.processURL(TheForm.s.gifInput.val()),
 		soundURL         = TheForm.processURL(TheForm.s.soundInput.val()),
 		startTime        = parseInt(TheForm.s.startTimeInput.val()),
@@ -48,9 +48,9 @@ TheForm = {
 		}
 		
 		$.each(GifSound.s.gifPlugins, function(pluginName, plugin) {
-			gifID = plugin.recogniseURL(gifURL);
+			gifId = plugin.recogniseURL(gifURL);
 			
-			if (gifID) {
+			if (gifId) {
 				gifPlugin = pluginName;
 				return false;
 			}
@@ -62,9 +62,9 @@ TheForm = {
 		}
 		
 		$.each(GifSound.s.soundPlugins, function(pluginName, plugin) {
-			soundID = plugin.recogniseURL(soundURL);
+			soundId = plugin.recogniseURL(soundURL);
 			
-			if (soundID) {
+			if (soundId) {
 				soundPlugin = pluginName;
 				return false;
 			}
@@ -80,9 +80,9 @@ TheForm = {
 		 * Otherwise reloads the page with the new GifSound as the URL
 		 */
 		if (ThePage.supportsHistory()) {
-			GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime, true);
+			GifSound.createGifSound(gifId, soundId, gifPlugin, soundPlugin, startTime, true);
 		} else {
-			ThePage.updateURL(gifID, soundID, gifPlugin, soundPlugin, startTime);
+			ThePage.updateURL(gifId, soundId, gifPlugin, soundPlugin, startTime);
 		}
 	},
 	
@@ -102,7 +102,7 @@ TheForm = {
  * GIF PLUGINS
  * All gif plugins must have the following methods:
  * recogniseURL - Given a URL returns the string it could use to embed the gif or false. e.g. 'http://imgur.com/jVPevfc' --> 'jVPevfc'
- * verifyParam  - Given a string, returns true/false if it looks like the ID of a gif it can handle e.g. 'jVPevfc'. Don't verify if the resource exists (no HTTP requests)
+ * verifyParam  - Given a string, returns true/false if it looks like the Id of a gif it can handle e.g. 'jVPevfc'. Don't verify if the resource exists (no HTTP requests)
  * embedGif     - Given a string (of unknown usability), embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
  * playGif      - Plays embedded gif
  * pauseGif     - Pauses embedded gif
@@ -176,7 +176,7 @@ GifPlugin = {
 GifvPlugin = {
 	s : {
 		regex   : /^(?:http|https):\/\/(?:i\.)?imgur\.com\/([a-z0-9]{5,8})(?:\.gifv|\.gif)?$/i,
-		IDRegex : /^[a-zA-Z0-9]{5,8}$/,
+		IdRegex : /^[a-zA-Z0-9]{5,8}$/,
 		video   : false,
 	},
 	
@@ -190,21 +190,21 @@ GifvPlugin = {
 		}
 	},
 	
-	verifyParam : function(ID) {
-		if (ID.match(GifvPlugin.s.IDRegex)) {
+	verifyParam : function(Id) {
+		if (Id.match(GifvPlugin.s.IdRegex)) {
 			return true;
 		} else {
 			return false;
 		}
 	},
 	
-	// Embeds gifv player of given Imgur image ID to wrapper
-	embedGif : function(imgurID, wrapper) {
+	// Embeds gifv player of given Imgur image Id to wrapper
+	embedGif : function(imgurId, wrapper) {
 		var video = document.createElement('video'),
 		source1   = document.createElement('source'),
 		source2   = document.createElement('source'),
 		failure   = document.createElement('p'),
-		srcBase   = 'http://i.imgur.com/' + imgurID;
+		srcBase   = 'http://i.imgur.com/' + imgurId;
 		
 		video.loop   = true;
 		video.muted  = true;
@@ -258,7 +258,7 @@ GifvPlugin = {
  * SOUND PLUGINS
  * All sound plugins must have the following methods:
  * recogniseURL - Given a URL returns the (sub)string it would need to embed the sound or false if it could not
- * verifyParam  - Given a string, returns true/false if it looks like the ID of a sound it can handle e.g. 'Cx_5j6bvY88'. Don't verify if the resource exists (no HTTP requests)
+ * verifyParam  - Given a string, returns true/false if it looks like the Id of a sound it can handle e.g. 'Cx_5j6bvY88'. Don't verify if the resource exists (no HTTP requests)
  * embedSound   - Given a URL, embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
  * playSound    - Plays embedded sound
  * pauseSound   - Pauses embedded sound
@@ -266,14 +266,13 @@ GifvPlugin = {
 
 /*
  * Embeds videos from YouTube.com
- * Note: YouTube capitalises id as 'Id' while I use 'ID'
  */
 YTPlugin = {
 	s : {
 		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
-		IDRegex   : /^[a-zA-Z0-9_-]{11}$/,
-		playerID  : 'youtube-embed',
-		videoID   : '',    // .e.g dQw4w9WgXcQ
+		IdRegex   : /^[a-zA-Z0-9_-]{11}$/,
+		playerId  : 'youtube-embed',
+		videoId   : '',    // .e.g dQw4w9WgXcQ
 		startTime : 0,
 		length    : 0,
 		wrapper   : false,
@@ -293,9 +292,9 @@ YTPlugin = {
 		}
 	},
 	
-	// Verifies if a string (from a URL) matches the YouTube video ID format
-	verifyParam(ID) {
-		var match = ID.match(YTPlugin.s.IDRegex);
+	// Verifies if a string (from a URL) matches the YouTube video Id format
+	verifyParam(Id) {
+		var match = Id.match(YTPlugin.s.IdRegex);
 		
 		if (match) {
 			return true;
@@ -304,11 +303,11 @@ YTPlugin = {
 		}
 	},
 	
-	embedSound : function(videoID, wrapper, startTime) {
+	embedSound : function(videoId, wrapper, startTime) {
 		// Resets variable changed if video has been previously embedded
 		YTPlugin.s.firstPlay = true;
 		
-		YTPlugin.s.videoID   = videoID;
+		YTPlugin.s.videoId   = videoId;
 		YTPlugin.s.startTime = startTime;
 		YTPlugin.s.wrapper   = wrapper;
 		
@@ -338,15 +337,15 @@ YTPlugin = {
 	
 	// Loads video via YT API. Assumes API has been loaded
 	loadVideo : function() {
-		if (typeof TheSound.s.player === 'object' && document.getElementById(YTPlugin.s.playerID)) {
-			YTPlugin.s.player.loadVideoById(YTPlugin.s.videoID, YTPlugin.s.startTime);
+		if (typeof TheSound.s.player === 'object' && document.getElementById(YTPlugin.s.playerId)) {
+			YTPlugin.s.player.loadVideoById(YTPlugin.s.videoId, YTPlugin.s.startTime);
 		} else {
-			YTPlugin.s.wrapper.html('<div id="' + YTPlugin.s.playerID + '"/>');
+			YTPlugin.s.wrapper.html('<div id="' + YTPlugin.s.playerId + '"/>');
 			
-			YTPlugin.s.player = new YT.Player(YTPlugin.s.playerID, {
+			YTPlugin.s.player = new YT.Player(YTPlugin.s.playerId, {
 				height       : '300',
 				width        : '300',
-				videoId      : YTPlugin.s.videoID,
+				videoId      : YTPlugin.s.videoId,
 				playerVars   : {
 					'autoplay'       : 1,
 					'controls'       : 1,
@@ -355,7 +354,7 @@ YTPlugin = {
 					'rel'            : 0, // Don't show related videos
 					'fs'             : 0, // Disallow fullscreen
 					'loop'           : 1,
-					'playlist'       : YTPlugin.s.videoID,
+					'playlist'       : YTPlugin.s.videoId,
 					'start'          : YTPlugin.s.startTime,
 				},
 				events       : {
@@ -390,7 +389,7 @@ YTPlugin = {
 		var explanation;
 		
 		switch (event.data) {
-			// If this error occurs then something fucked up with URL validation or in passing the video ID to this plugin
+			// If this error occurs then something fucked up with URL validation or in passing the video Id to this plugin
 			case 2:
 				explanation = "Invalid YouTube Video ID (it's a bug if you can see this error)"
 			break;
@@ -434,16 +433,16 @@ YTPlugin = {
 SCPlugin = {
 	s : {
 		URLRegex   : /^(?:https|http):\/\/(?:(soundcloud\.com\/[a-z0-9\-_]{3,255}\/[a-z0-9\-_]{3,255})|(snd\.sc\/[a-z0-9]{6,7}))$/i,
-		IDRegex    : /^[0-9]{8,10}$/,
-		clientID   : 'dd2c702d213d9564881d266576fe80d0',
-		trackID    : '',
-		gotTrackID : false,
+		IdRegex    : /^[0-9]{8,10}$/,
+		clientId   : 'dd2c702d213d9564881d266576fe80d0',
+		trackId    : '',
+		gotTrackId : false,
 		startTime  : 0,
 		apiLoaded  : false,
 		player     : false,
 		iFrame     : false,
 		wrapper    : false,
-		playerID   : 'sc-embed',
+		playerId   : 'sc-embed',
 		firstPlay  : true,
 	},
 	
@@ -457,8 +456,8 @@ SCPlugin = {
 		}
 	},
 	
-	verifyParam : function(ID) {
-		var match = ID.match(SCPlugin.s.IDRegex);
+	verifyParam : function(Id) {
+		var match = Id.match(SCPlugin.s.IdRegex);
 		
 		if (match) {
 			return true;
@@ -467,14 +466,14 @@ SCPlugin = {
 		}
 	},
 	
-	embedSound : function(soundID, wrapper, startTime) {
+	embedSound : function(soundId, wrapper, startTime) {
 		SCPlugin.s.startTime  = startTime;
 		SCPlugin.s.wrapper    = wrapper;
-		SCPlugin.s.trackID    = soundID;
-		SCPlugin.s.gotTrackID = SCPlugin.verifyParam(soundID);
+		SCPlugin.s.trackId    = soundId;
+		SCPlugin.s.gotTrackId = SCPlugin.verifyParam(soundId);
 		SCPlugin.s.firstPlay  = true;
 		
-		if (SCPlugin.s.apiLoaded && SCPlugin.s.gotTrackID) {
+		if (SCPlugin.s.apiLoaded && SCPlugin.s.gotTrackId) {
 			SCPlugin.loadSound();
 		}
 		
@@ -487,31 +486,31 @@ SCPlugin = {
 			});
 		}
 		
-		// Checks if plugin has been passed track ID '241851698' or track URL 'iamsorryforwhatihavedone/dogg-simulator'
-		if (!SCPlugin.verifyParam(soundID)) {
+		// Checks if plugin has been passed track Id '241851698' or track URL 'iamsorryforwhatihavedone/dogg-simulator'
+		if (!SCPlugin.verifyParam(soundId)) {
 			var params = $.param({
-				client_id : SCPlugin.s.clientID,
-				url       : 'http://' + soundID,
+				client_id : SCPlugin.s.clientId,
+				url       : 'http://' + soundId,
 			}, true);
 			
 			$.ajax({
 				url      : 'http://api.soundcloud.com/resolve.json?' + params,
 				cache    : true,
 				dataType : 'json',
-				complete : SCPlugin.recievedTrackID,
+				complete : SCPlugin.recievedTrackId,
 			});
 		}
 	},
 	
-	// Handles SoundCloud API response to resolving a track's URL to its numeric ID
-	recievedTrackID : function(response) {
+	// Handles SoundCloud API response to resolving a track's URL to its numeric Id
+	recievedTrackId : function(response) {
 		if (response.status === 200) {
-			SCPlugin.s.gotTrackID = true;
-			SCPlugin.s.trackID    = response.responseJSON.id;
+			SCPlugin.s.gotTrackId = true;
+			SCPlugin.s.trackId    = response.responseJSON.id;
 			
 			// Checks if the GifSound's changed while the script's been loading
 			if (TheSound === SCPlugin && SCPlugin.s.apiLoaded) {
-				GifSound.updateSoundID(SCPlugin.s.trackID);
+				GifSound.updateSoundId(SCPlugin.s.trackId);
 				
 				SCPlugin.loadSound();
 			}
@@ -525,7 +524,7 @@ SCPlugin = {
 			SCPlugin.s.apiLoaded = true;
 			
 			// Checks if the GifSound's changed while the script's been loading
-			if (TheSound === SCPlugin && SCPlugin.s.gotTrackID) {
+			if (TheSound === SCPlugin && SCPlugin.s.gotTrackId) {
 				SCPlugin.loadSound();
 			}
 		} else {
@@ -535,14 +534,14 @@ SCPlugin = {
 	
 	loadSound : function() {
 		// If player already exists (last GifSound played used SoundCloud)
-		if (typeof SCPlugin.s.player === 'object' && document.getElementById(SCPlugin.s.playerID)) {
+		if (typeof SCPlugin.s.player === 'object' && document.getElementById(SCPlugin.s.playerId)) {
 			console.log('repurposing existing embed');
-			SCPlugin.s.player.load('https://api.soundcloud.com/tracks/' + SCPlugin.s.trackID);
+			SCPlugin.s.player.load('https://api.soundcloud.com/tracks/' + SCPlugin.s.trackId);
 		} else {
 			var iFrame         = document.createElement('iframe');
 			
-			iFrame.id          = SCPlugin.s.playerID;
-			iFrame.src         = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + SCPlugin.s.trackID;
+			iFrame.id          = SCPlugin.s.playerId;
+			iFrame.src         = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + SCPlugin.s.trackId;
 			iFrame.width       = '100%';
 			iFrame.height      = '300px';
 			iFrame.scrolling   = 'no';
@@ -551,7 +550,7 @@ SCPlugin = {
 			SCPlugin.s.wrapper[0].innerHTML = '';
 			SCPlugin.s.wrapper[0].appendChild(iFrame);
 			
-			SCPlugin.s.player = SC.Widget(SCPlugin.s.playerID);
+			SCPlugin.s.player = SC.Widget(SCPlugin.s.playerId);
 			
 			SCPlugin.s.player.bind(SC.Widget.Events.READY, SCPlugin.embedReady);
 			SCPlugin.s.player.bind(SC.Widget.Events.ERROR, SCPlugin.onPlayerError);
@@ -614,7 +613,7 @@ ThePage = {
 	
 	// Creates GifSound from parameters object
 	gifSoundFromParams : function(URLParams) {
-		var gifPlugin, soundPlugin, gifID, soundID, startTime,
+		var gifPlugin, soundPlugin, gifId, soundId, startTime,
 		foundGifPlugin   = false,
 		foundSoundPlugin = false,
 		foundStartTime   = false;
@@ -626,12 +625,12 @@ ThePage = {
 				foundGifPlugin = true;
 				
 				gifPlugin = paramName;
-				gifID     = paramValue;
+				gifId     = paramValue;
 			} else if (!foundSoundPlugin && GifSound.s.soundPlugins.hasOwnProperty(paramName) && GifSound.s.soundPlugins[paramName].verifyParam(paramValue)) {
 				foundSoundPlugin = true;
 				
 				soundPlugin = paramName;
-				soundID     = paramValue;
+				soundId     = paramValue;
 			} else if (!foundStartTime && paramName === 'st') {
 				foundStartTime = true;
 				
@@ -649,7 +648,7 @@ ThePage = {
 			startTime = 0;
 		}
 		
-		GifSound.createGifSound(gifID, soundID, gifPlugin, soundPlugin, startTime);
+		GifSound.createGifSound(gifId, soundId, gifPlugin, soundPlugin, startTime);
 	},
 	
 	// Turns URL parameters into key/value pairs
@@ -684,11 +683,11 @@ ThePage = {
 	},
 	
 	// Updates the current URL using either the HTML5 History API or just setting the URL forcing a page reload
-	updateURL : function(gifID, soundID, gifPlugin, soundPlugin, startTime) {
+	updateURL : function(gifId, soundId, gifPlugin, soundPlugin, startTime) {
 		var params = {};
 		
-		params[gifPlugin]   = gifID;
-		params[soundPlugin] = soundID;
+		params[gifPlugin]   = gifId;
+		params[soundPlugin] = soundId;
 		
 		if (startTime !== 0) {
 			params.st = startTime;
@@ -739,21 +738,21 @@ GifSound = {
 		soundReady         : false,
 		currentGifPlugin   : '',
 		currentSoundPlugin : '',
-		gifID              : '',
-		soundID            : '',
+		gifId              : '',
+		soundId            : '',
 		startTime          : 0,
 		updateURL          : false,
 	},
 	
-	createGifSound : function(gifID, soundID, gifPlugin, soundPlugin, startTime, updateURL) {
+	createGifSound : function(gifId, soundId, gifPlugin, soundPlugin, startTime, updateURL) {
 		GifSound.setGifState('loading');
 		GifSound.setSoundState('loading');
 		
 		GifSound.s.gifReady   = false;
 		GifSound.s.soundReady = false;
 		
-		GifSound.s.gifID      = gifID;
-		GifSound.s.soundID    = soundID;
+		GifSound.s.gifId      = gifId;
+		GifSound.s.soundId    = soundId;
 		GifSound.s.startTime  = startTime;
 		
 		// Only resets gif and sound areas if plugin has changed (allows plugin to reuse embed/iframe to save time)
@@ -771,8 +770,8 @@ GifSound = {
 			TheSound                      = GifSound.s.soundPlugins[soundPlugin];
 		}
 		
-		TheGif.embedGif(gifID, GifSound.s.gifWrapper);
-		TheSound.embedSound(soundID, GifSound.s.soundWrapper, startTime);
+		TheGif.embedGif(gifId, GifSound.s.gifWrapper);
+		TheSound.embedSound(soundId, GifSound.s.soundWrapper, startTime);
 		
 		if (typeof updateURL === 'boolean' && updateURL) {
 			GifSound.s.updateURL = true;
@@ -796,16 +795,16 @@ GifSound = {
 	// Adds GifSound to page's URL parameters (if necessary)
 	updateURL : function() {
 		if (GifSound.s.updateURL) {
-			ThePage.updateURL(GifSound.s.gifID, GifSound.s.soundID, GifSound.s.currentGifPlugin, GifSound.s.currentSoundPlugin, GifSound.s.startTime);
+			ThePage.updateURL(GifSound.s.gifId, GifSound.s.soundId, GifSound.s.currentGifPlugin, GifSound.s.currentSoundPlugin, GifSound.s.startTime);
 		}
 	},
 	
-	updateGifID : function(gifID) {
-		GifSound.s.gifID = gifID;
+	updateGifId : function(gifId) {
+		GifSound.s.gifId = gifId;
 	},
 	
-	updateSoundID : function(soundID) {
-		GifSound.s.soundID = soundID;
+	updateSoundId : function(soundId) {
+		GifSound.s.soundId = soundId;
 	},
 	
 	setGifState : function(newState) {
