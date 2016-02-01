@@ -118,7 +118,7 @@ img#fork-me {
 }
 
 .display-state {
-	visibility: hidden;
+	display: none;
 	align-items: center;
 	width: 100%;
 	height: 100%;
@@ -126,7 +126,6 @@ img#fork-me {
 
 .display-state.current-state {
 	display: flex;
-	visibility: visible;
 }
 
 .loading-wrap { 
