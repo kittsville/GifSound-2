@@ -232,24 +232,24 @@ GifvPlugin = {
 		wrapper[0].appendChild(video);
 	},
 	
-	videoError(event) {
+	videoError : function(event) {
 		event.target.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
 		
 		GifSound.gifFailed('Maybe it was deleted?');
 	},
 	
 	// When browser thinks video is sufficiently buffered for continuous playback
-	videoBuffered() {
+	videoBuffered : function() {
 		GifvPlugin.s.video.removeEventListener('canplaythrough', GifvPlugin.videoBuffered, false);
 		
 		GifSound.gifReady();
 	},
 	
-	playGif() {
+	playGif : function() {
 		GifvPlugin.s.video.play();
 	},
 	
-	pauseGif() {
+	pauseGif : function() {
 		GifvPlugin.s.video.pause();
 	},
 };
@@ -293,7 +293,7 @@ YTPlugin = {
 	},
 	
 	// Verifies if a string (from a URL) matches the YouTube video Id format
-	verifyParam(Id) {
+	verifyParam : function(Id) {
 		var match = Id.match(YTPlugin.s.IdRegex);
 		
 		if (match) {
@@ -572,7 +572,7 @@ SCPlugin = {
 		}
 	},
 	
-	embedReadyAtStartTime(data) {
+	embedReadyAtStartTime : function(data) {
 		SCPlugin.s.player.unbind(SC.Widget.Events.PLAY_PROGRESS);
 		SCPlugin.s.player.pause();
 		setTimeout(GifSound.soundReady, 500);
@@ -957,7 +957,7 @@ UserNotifications = {
 		displaying       : false,
 	},
 	
-	clearNotifications() {
+	clearNotifications : function() {
 		if (UserNotifications.s.displaying) {
 			UserNotifications.s.notificationArea.html('');
 			UserNotifications.s.displaying = false;
