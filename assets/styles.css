@@ -27,7 +27,6 @@ h1, p {
 #content {
 	padding-bottom: 3em;
 	margin: 0em auto;
-	overflow: auto;
 	display: block;
 	text-align: center;
 }
