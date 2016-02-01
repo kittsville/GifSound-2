@@ -19,7 +19,7 @@ TheForm = {
 		soundInput     : $('input#sound-url'),
 		startTimeInput : $('input#sound-start-time'),
 		makeButton     : $('a#make-gifsound'),
-		urlSanitizer   : /[^-A-Za-z0-9\+&@#\/%?=~_|!:,.;\(\)]/g, // Via stackoverflow.com/a/205967/3565450
+		urlSanitizer   : /[^\-A-Za-z0-9\+&@#\/%?=~_\|!:,.;\(\)]/g, // Via stackoverflow.com/a/205967/3565450
 		httpDetector   : /^(?:http|https):\/\//i // Checks if URL starts with http:// or https://
 	},
 	
@@ -269,8 +269,8 @@ GifvPlugin = {
  */
 YTPlugin = {
 	s : {
-		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
-		IdRegex   : /^[a-zA-Z0-9_-]{11}$/,
+		URLRegex  : /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([a-zA-Z0-9_\-]{11}).*/, // Improved from http://stackoverflow.com/a/8260383/3565450
+		IdRegex   : /^[a-zA-Z0-9_\-]{11}$/,
 		playerId  : 'youtube-embed',
 		videoId   : '',    // .e.g dQw4w9WgXcQ
 		startTime : 0,
