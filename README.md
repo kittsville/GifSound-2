@@ -1,25 +1,32 @@
-# GifSound 2
+# GifSound 2  
+*Improved gif + sound mashups*
 
-GifSound.com but better
+GifSound 2 is a remake of GifSound.com that aims to improve upon the site based on my personal gripes and feedback from the [/r/gifsound](http://reddit.com/r/gifsound) community. GifSound 2 is current in pre-Alpha with its first Alpha release coming soon.
 
-### Better How?
+### Features (current)
 
 - Syncs gif and sound start time
 - No server-side code
 - Modular gif/sound plugins (easy to add support for new gif/sound embeds)
 
-### Why?
+### Features (planned)
 
-I spend too much time on [/r/GifSound](http://reddit.com/r/gifsound) and found it annoying that gifs sometimes didn't sync to the audio because of gif/YouTube loading times. I was going to contact gifsound.com's creators but I wanted to check if it was possible first. Ended up making my own version from scratch.
+- Broader gif/sound support
+- Personal preferences (gif/gifv or whether to sync gif/sound)
+- Broader device support (small screens and older browsers)
 
 ### Roadmap
 
-1. Finish adding basic features and rudimentary media support (add gifv and Giphy support)
-2. Contact /r/gifsound mods with aims to gain subscriber feedback
+1. Contact /r/gifsound mods with aims to gain feedback/approval
+2. Finish adding basic features and rudimentary media support (Giphy and Gfycat plugins)
 3. Start releasing weekly with minor features each time
-4. Add all useful media types (SoundCloud etc.)
+4. Add all useful media plugins
 5. Switch to more gradual releases and issue/passive contact based development
 6. Maintain application as needs be (fix media plugins etc.)
+
+### Contributing
+
+If you see any bugs that you fancy fixing then feel free to send me a pull request. Bear in mind that this application is still in its early stages so don't take too long between forking and the pull request otherwise the app will have steamed ahead of you. I'll try to document the application structure on the wiki but check the state of the `dev` branch in case I've fallen behind in my wiki contributions.
 
 ### Contact
 
