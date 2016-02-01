@@ -10,7 +10,7 @@
  */
 var TheGif, TheSound, TheForm, ThePage, GifSound, UserNotifications;
 
-$(function(){
+$(function() {
 
 TheForm = {
 	s: {
