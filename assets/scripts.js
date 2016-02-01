@@ -533,22 +533,29 @@ SCPlugin = {
 	},
 	
 	loadSound : function() {
-		var iFrame         = document.createElement('iframe');
-		
-		iFrame.id          = SCPlugin.s.playerId;
-		iFrame.src         = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + SCPlugin.s.trackId;
-		iFrame.width       = '100%';
-		iFrame.height      = '300px';
-		iFrame.scrolling   = 'no';
-		iFrame.frameBorder = '0';
-		
-		SCPlugin.s.wrapper[0].innerHTML = '';
-		SCPlugin.s.wrapper[0].appendChild(iFrame);
-		
-		SCPlugin.s.player = SC.Widget(SCPlugin.s.playerId);
-		
-		SCPlugin.s.player.bind(SC.Widget.Events.READY, SCPlugin.embedReady);
-		SCPlugin.s.player.bind(SC.Widget.Events.ERROR, SCPlugin.onPlayerError);
+		// If player already exists (last GifSound played used SoundCloud)
+		if (typeof SCPlugin.s.player === 'object' && document.getElementById(SCPlugin.s.playerId)) {
+			SCPlugin.s.player.load('https://api.soundcloud.com/tracks/' + SCPlugin.s.trackId, {
+				callback : SCPlugin.embedReady,
+			});
+		} else {
+			var iFrame         = document.createElement('iframe');
+			
+			iFrame.id          = SCPlugin.s.playerId;
+			iFrame.src         = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + SCPlugin.s.trackId;
+			iFrame.width       = '100%';
+			iFrame.height      = '300px';
+			iFrame.scrolling   = 'no';
+			iFrame.frameBorder = '0';
+			
+			SCPlugin.s.wrapper[0].innerHTML = '';
+			SCPlugin.s.wrapper[0].appendChild(iFrame);
+			
+			SCPlugin.s.player = SC.Widget(SCPlugin.s.playerId);
+			
+			SCPlugin.s.player.bind(SC.Widget.Events.READY, SCPlugin.embedReady);
+			SCPlugin.s.player.bind(SC.Widget.Events.ERROR, SCPlugin.onPlayerError);
+		}
 	},
 	
 	onPlayerError : function() {
