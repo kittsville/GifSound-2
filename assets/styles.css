@@ -200,11 +200,32 @@ input#sound-start-time {
 }
 
 /*
+ * Version Footer
+ */
+
+#version {
+	position: absolute;
+	bottom: 5px;
+	right: 10px;
+	font-size: 11px;
+	font-style: italic;
+}
+
+#version a {
+	color: inherit;
+}
+
+#version span {
+	float: right;
+	clear: both;
+}
+
+/*
  * Hides clutter for small screens
  */
 
 @media only screen and (max-width : 767px) {
-	img#fork-me {
+	img#fork-me, #version {
 		display: none;
 	}
 }
