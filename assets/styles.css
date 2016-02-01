@@ -54,12 +54,6 @@ img#fork-me {
 	border: 0;
 }
 
-@media only screen and (max-width : 767px) {
-	img#fork-me {
-		display: none;
-	}
-}
-
 /*
  * Notifications
  */
@@ -203,6 +197,16 @@ input#make-gifsound {
 
 input#sound-start-time {
 	width: 30px;
+}
+
+/*
+ * Hides clutter for small screens
+ */
+
+@media only screen and (max-width : 767px) {
+	img#fork-me {
+		display: none;
+	}
 }
 
 /* Spinners (displays while gif/sound loads)
