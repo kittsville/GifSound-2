@@ -535,7 +535,6 @@ SCPlugin = {
 	loadSound : function() {
 		// If player already exists (last GifSound played used SoundCloud)
 		if (typeof SCPlugin.s.player === 'object' && document.getElementById(SCPlugin.s.playerId)) {
-			console.log('repurposing existing embed');
 			SCPlugin.s.player.load('https://api.soundcloud.com/tracks/' + SCPlugin.s.trackId);
 		} else {
 			var iFrame         = document.createElement('iframe');
