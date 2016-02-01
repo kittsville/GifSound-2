@@ -101,11 +101,11 @@ TheForm = {
 /*
  * GIF PLUGINS
  * All gif plugins must have the following methods:
- * recogniseURL    - Given a URL returns true or false if it can handle that URL
- * embedGifByURL   - Given a URL it can process, embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
- * embedGifByParam - Given a string (of unknown usability), embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
- * playGif         - Plays embedded gif
- * pauseGif        - Pauses embedded gif
+ * recogniseURL - Given a URL returns the string it could use to embed the gif or false. e.g. 'http://imgur.com/jVPevfc' --> 'jVPevfc'
+ * verifyParam  - Given a string, returns true/false if it looks like the ID of a gif it can handle e.g. 'jVPevfc'. Don't verify if the resource exists (no HTTP requests)
+ * embedGif     - Given a string (of unknown usability), embeds appropriate gif player (Webm player, <img> tag, etc.) with media paused
+ * playGif      - Plays embedded gif
+ * pauseGif     - Pauses embedded gif
  */
 
 /*
@@ -257,11 +257,11 @@ GifvPlugin = {
 /*
  * SOUND PLUGINS
  * All sound plugins must have the following methods:
- * recogniseURL      - Given a URL returns true or false if it can handle that URL
- * embedSoundByURL   - Given a URL, embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
- * embedSoundByParam - Given a string (of dubious usability), embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
- * playSound         - Plays embedded sound
- * pauseSound        - Pauses embedded sound
+ * recogniseURL - Given a URL returns the (sub)string it would need to embed the sound or false if it could not
+ * verifyParam  - Given a string, returns true/false if it looks like the ID of a sound it can handle e.g. 'Cx_5j6bvY88'. Don't verify if the resource exists (no HTTP requests)
+ * embedSound   - Given a URL, embeds appropriate sound player (YouTube embed, <audio> tag, etc.) with media paused
+ * playSound    - Plays embedded sound
+ * pauseSound   - Pauses embedded sound
  */
 
 /*
