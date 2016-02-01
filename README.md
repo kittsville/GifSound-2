@@ -32,6 +32,12 @@ If you see any bugs that you fancy fixing then feel free to send me a pull reque
 
 Please direct suggestions, questions, sexy nudes and hate mail to kittsville(at)gmail.com or pester me on Twitter [(@kittsville)](https://twitter.com/kittsville) or message me on [Reddit](http://reddit.com/user/kittsville/).
 
+### Legal
+
+GifSound2.com does not host any of the gifs or sounds you see on it. This website embeds that content from other sources. If you see a gifsound you don't like then please contact the gif host (Imgur.com, giphy.com, etc.) or the sound host (YouTube.com, SoundCloud.com, etc.) and ask them to take it down. **I cannot take down what I am not hosting**, just as I can't move a parked car that I do not own and did not park.
+
+All gifsound mashups are the responsibility of their creators.
+
 ### License
 
 GPL v2 or later
