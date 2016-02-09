@@ -670,7 +670,7 @@ ThePage = {
 	
 	handleBrowserNavigation : function(event) {
 		UserNotifications.clearNotifications();
-		console.log(event);
+		
 		if (event.state !== null) {
 			ThePage.gifSoundFromParams(event.state);
 		} else {
