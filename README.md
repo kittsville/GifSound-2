@@ -1,7 +1,9 @@
 # GifSound 2  
 *Improved gif + sound mashups*
 
-GifSound 2 is a remake of GifSound.com that aims to improve upon the site based on my personal gripes and feedback from the [/r/gifsound](http://reddit.com/r/gifsound) community. GifSound 2 is current in pre-Alpha with its first Alpha release coming soon.
+**Following messages with the /r/GifSound moderators this project has been suspended indefinitely**
+
+GifSound 2 is a remake of GifSound.com that aims to improve upon the site based on my personal gripes and feedback from the [/r/gifsound](http://reddit.com/r/gifsound) community. GifSound 2 is current in pre-Alpha.
 
 ### Features (current)
 
