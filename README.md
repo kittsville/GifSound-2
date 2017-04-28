@@ -1,8 +1,6 @@
 # GifSound 2  
 *Improved gif + sound mashups*
 
-**Following messages with the /r/GifSound moderators this project has been suspended indefinitely**
-
 GifSound 2 is an abandoned prototype of a gif/audio syncing web app. It was created in a week to gague the interest of Reddit's [/r/gifsound](http://reddit.com/r/gifsound) community. The moderators weren't interested and my uni holiday ended so I abandoned the project.
 
 It's fallen into disrepair but you could probably get it working with some spit and grease.
