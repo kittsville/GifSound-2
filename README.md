@@ -3,7 +3,9 @@
 
 **Following messages with the /r/GifSound moderators this project has been suspended indefinitely**
 
-GifSound 2 is a remake of GifSound.com that aims to improve upon the site based on my personal gripes and feedback from the [/r/gifsound](http://reddit.com/r/gifsound) community. GifSound 2 is current in pre-Alpha.
+GifSound 2 is an abandoned prototype of a gif/audio syncing web app. It was created in a week to gague the interest of Reddit's [/r/gifsound](http://reddit.com/r/gifsound) community. The moderators weren't interested and my uni holiday ended so I abandoned the project.
+
+It's fallen into disrepair but you could probably get it working with some spit and grease.
 
 ### Features (current)
 
@@ -11,24 +13,9 @@ GifSound 2 is a remake of GifSound.com that aims to improve upon the site based 
 - No server-side code
 - Modular gif/sound plugins (easy to add support for new gif/sound embeds)
 
-### Features (planned)
-
-- Broader gif/sound support
-- Personal preferences (gif/gifv or whether to sync gif/sound)
-- Broader device support (small screens and older browsers)
-
-### Roadmap
-
-1. Contact /r/gifsound mods with aims to gain feedback/approval
-2. Finish adding basic features and rudimentary media support (Giphy and Gfycat plugins)
-3. Start releasing weekly with minor features each time
-4. Add all useful media plugins
-5. Switch to more gradual releases and issue/passive contact based development
-6. Maintain application as needs be (fix media plugins etc.)
-
 ### Contributing
 
-If you see any bugs that you fancy fixing then feel free to send me a pull request. Bear in mind that this application is still in its early stages so don't take too long between forking and the pull request otherwise the app will have steamed ahead of you. I'll try to document the application structure on the wiki but check the state of the `dev` branch in case I've fallen behind in my wiki contributions.
+Feel free to have a crack at getting this thing working again. If you want to take over the project I can give you the domain `gifsound2.com`.
 
 ### Contact
 
