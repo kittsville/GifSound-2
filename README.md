@@ -13,7 +13,7 @@ It's fallen into disrepair but you could probably get it working with some spit 
 
 ### Contributing
 
-Feel free to have a crack at getting this thing working again. If you want to take over the project I can give you the domain `gifsound2.com`.
+Feel free to have a crack at getting this thing working again. I stopped renewing the domain `gifsound2.com` so unfortunately I can't give you it.
 
 ### Contact
 
@@ -21,7 +21,7 @@ Please direct suggestions, questions, sexy nudes and hate mail to kittsville(at)
 
 ### Legal
 
-GifSound2.com does not host any of the gifs or sounds that make gifsounds. GifSound2 embeds that content from 3rd parties. If you see a gifsound you don't like then please contact the gif host (Imgur.com, giphy.com, etc.) or the sound host (YouTube.com, SoundCloud.com, etc.) and ask them to take it down. **I cannot take down what I am not hosting**, just as I can't move a parked car that I do not own and did not park.
+GifSound2 does not host any of the gifs or sounds that make gifsounds. GifSound2 embeds that content from 3rd parties. If you see a gifsound you don't like then please contact the gif host (Imgur.com, giphy.com, etc.) or the sound host (YouTube.com, SoundCloud.com, etc.) and ask them to take it down. **I cannot take down what I am not hosting**, just as I can't move a parked car that I do not own and did not park.
 
 All gifsounds are the responsibility of their creators.
 
@@ -31,7 +31,7 @@ GPL v2 or later
 
 ### 3rd Party Software Used
 
-####SpinKit
+#### SpinKit
 
 *By Tobias Ahlin*
 
@@ -40,4 +40,3 @@ CSS loading spinners
 [GitHub](https://github.com/tobiasahlin/SpinKit)
 
 License: MIT
-
